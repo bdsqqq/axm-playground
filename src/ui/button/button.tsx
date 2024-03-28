@@ -2,11 +2,16 @@ import * as React from "react";
 
 import { Slot } from "@radix-ui/react-slot";
 import * as Toggle from '@radix-ui/react-toggle';
-import { type ToggleProps } from "@radix-ui/react-toggle";
+import { type ToggleProps, PrimitiveButtonProps } from "@radix-ui/react-toggle";
 import { cva, type VariantProps } from "class-variance-authority";
 
 import { cn } from "../util";
 import { Spinner } from "../icons";
+
+type TogglePropsWithoutPrimitiveButtonProps = Omit<ToggleProps, keyof PrimitiveButtonProps>;
+type TogglePropsWithValuesAsNever = {
+  [K in keyof TogglePropsWithoutPrimitiveButtonProps]: never;
+}; 
 
 /** Map of modifier keys to their KeyboardEvent properties
  * {@link https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/getModifierState MDN Reference}
@@ -146,12 +151,20 @@ interface BaseButtonProps {
 }
 
 export interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,  BaseButtonProps,
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>,  BaseButtonProps, TogglePropsWithValuesAsNever,
     VariantProps<typeof buttonVariants> {
   asChild?: boolean;
+  toggle?: false;
 }
 
-export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+export interface ToggleButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>,  BaseButtonProps, ToggleProps,
+    VariantProps<typeof buttonVariants> {
+  asChild?: false;
+  toggle: true;
+}
+
+export const Button = React.forwardRef<HTMLButtonElement, ButtonProps | ToggleButtonProps>(
   (
     {
       className,
@@ -164,6 +177,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       shortcut,
       children,
       loadingStrategy = "delay",
+      toggle,
       ...props
     },
     ref,
@@ -207,7 +221,8 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       }
     }, [_loading, loadingStrategy, minimumDurationCallback, delayCallback]);
 
-    const Comp = asChild ? Slot : "button";
+    const CompIfNotAsChild = toggle ? Toggle.Root : "button";
+    const Comp = asChild ? Slot : CompIfNotAsChild;
     const Left = loading ? <Spinner className="animate-spin" /> : left;
 
     return (
@@ -231,21 +246,6 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   },
 );
 Button.displayName = "Button";
-
-export interface ToggleButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,  BaseButtonProps, ToggleProps,
-    VariantProps<typeof buttonVariants> {}
-
-export const ToggleButton = React.forwardRef<HTMLButtonElement, ToggleButtonProps>(
-  ({ children, defaultPressed, pressed, onPressedChange, ...props }, ref) => (
-    <Toggle.Root asChild defaultPressed={defaultPressed} pressed={pressed} onPressedChange={onPressedChange}>
-      <Button ref={ref} {...props}>
-        {children}
-      </Button>
-    </Toggle.Root>
-  ),
-);
-
 
 /**
  * Group of buttons

@@ -1,4 +1,4 @@
-import { Button, ButtonGroup, ButtonProps, ToggleButton } from "./button";
+import { Button, ButtonGroup, ButtonProps } from "./button";
 import { Add, ChevronDown } from "../icons";
 import { useState } from "react";
 
@@ -218,9 +218,9 @@ export const ButtonShowcase = () => {
         <section>
           <h2>Toggle Button</h2>
           <div className="flex gap-2">
-            <ToggleButton size="sm" left={<Add />} defaultPressed={false} variant="primary" />
-            <ToggleButton size="sm" left={<Add />} defaultPressed={false} variant="secondary" />
-            <ToggleButton size="sm" left={<Add />} defaultPressed={false} variant="tertiary" />
+            <Button toggle size="sm" left={<Add />} defaultPressed={false} variant="primary" />
+            <Button toggle size="sm" left={<Add />} defaultPressed={false} variant="secondary" />
+            <Button toggle size="sm" left={<Add />} defaultPressed={false} variant="tertiary" />
           </div>
         </section>
       </div>
@@ -410,9 +410,9 @@ export const ButtonShowcase = () => {
         <section>
           <h2>Toggle Button</h2>
           <div className="flex gap-2">
-            <ToggleButton left={<Add />} defaultPressed={false} variant="primary" />
-            <ToggleButton left={<Add />} defaultPressed={false} variant="secondary" />
-            <ToggleButton left={<Add />} defaultPressed={false} variant="tertiary" />
+            <Button toggle left={<Add />} defaultPressed={false} variant="primary" />
+            <Button toggle left={<Add />} defaultPressed={false} variant="secondary" />
+            <Button toggle left={<Add />} defaultPressed={false} variant="tertiary" />
           </div>
         </section>
       </div>
