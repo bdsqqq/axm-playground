@@ -1,3 +1,9 @@
 {
-  "plugins": ["prettier-plugin-tailwindcss"]
+  "arrowParens": "always",
+  "plugins": ["prettier-plugin-tailwindcss"],
+  "printWidth": 80,
+  "singleQuote": true,
+  "tailwindConfig": "./tailwind.config.js",
+  "tailwindFunctions": ["classNames", "cn", "cva"],
+  "trailingComma": "es5"
 }
