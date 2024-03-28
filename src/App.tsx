@@ -6,6 +6,45 @@ import { cva, type VariantProps } from "class-variance-authority";
 
 import { cn } from "./ui/util";
 
+const Spinner = ({ ...props }: React.ComponentProps<"svg">) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="16"
+    height="16"
+    viewBox="0 0 16 16"
+    fill="none"
+    {...props}
+  >
+    <path
+      d="M8 1.5C9.19862 1.5 10.3739 1.83143 11.3959 2.45765C12.418 3.08388 13.2469 3.98051 13.7912 5.04843C14.3355 6.11635 14.5739 7.31398 14.48 8.50892C14.3862 9.70387 13.9638 10.8496 13.2594 11.8195L12.4529 11.2337C13.0492 10.4126 13.4068 9.44257 13.4863 8.43088C13.5658 7.41918 13.3639 6.40522 12.9031 5.50107C12.4423 4.59691 11.7405 3.83779 10.8752 3.3076C10.0099 2.77741 9.01481 2.4968 8 2.4968V1.5Z"
+      fill="currentColor"
+    />
+  </svg>
+);
+
+const Add = ({ ...props }: React.ComponentProps<"svg">) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="16"
+    height="16"
+    viewBox="0 0 16 16"
+    fill="none"
+    {...props}
+  >
+    <g clip-path="url(#clip0_308_995)">
+      <path
+        d="M8.5 7.5V2.5H7.5V7.5H2.5V8.5H7.5V13.5H8.5V8.5H13.5V7.5H8.5Z"
+        fill="currentColor"
+      />
+    </g>
+    <defs>
+      <clipPath id="clip0_308_995">
+        <rect width="16" height="16" fill="white" />
+      </clipPath>
+    </defs>
+  </svg>
+);
+
 /** Map of modifier keys to their KeyboardEvent properties
  * {@link https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/getModifierState MDN Reference}
  */
@@ -27,7 +66,10 @@ export const ModifierKeys = [
 ] as const;
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center border border-transparent whitespace-nowrap rounded transition-colors",
+  [
+    "inline-flex items-center gap-2 justify-center border border-transparent whitespace-nowrap rounded transition-all duration-[70ms]",
+    "active:transform active:scale-[0.98]",
+  ],
   {
     variants: {
       variant: {
@@ -97,24 +139,99 @@ export interface ButtonProps
 // shortcut
 // right (icon, usually reserved for chevron)
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, asChild = false, ...props }, ref) => {
+  (
+    {
+      className,
+      variant,
+      size,
+      asChild = false,
+      loading,
+      left,
+      right,
+      shortcut,
+      children,
+      ...props
+    },
+    ref
+  ) => {
     const Comp = asChild ? Slot : "button";
+    const Left = loading ? <Spinner className="animate-spin" /> : left;
+
     return (
       <Comp
         className={cn(buttonVariants({ variant, size, className }))}
         ref={ref}
         {...props}
-      />
+      >
+        {Left}
+        <span className="inline-flex gap-1">
+          {children}
+          {shortcut && (
+            <Shortcut modifier={shortcut.modifier}>{shortcut.key}</Shortcut>
+          )}
+        </span>
+        {right}
+      </Comp>
     );
   }
 );
 Button.displayName = "Button";
 
+const ModifierToElement = {
+  Accel: "⌘",
+  Alt: "⌥",
+  AltGraph: "AltGr",
+  CapsLock: "Caps",
+  Control: "Ctrl",
+  Fn: "Fn",
+  Meta: "⌘",
+  NumLock: "Num",
+  OS: "OS",
+  ScrollLock: "Scroll",
+  Shift: "⇧",
+  Symbol: "Sym",
+} as const;
+
+const Shortcut = ({
+  children,
+  modifier,
+}: {
+  children: string;
+  modifier?: ModifierKey[];
+}) => {
+  const stableId = React.useId();
+
+  return (
+    <span className="flex items-center gap-0.5">
+      {modifier?.map((mod) => (
+        <kbd
+          className="text-sm leading-none rounded-[3px] bg-[#00000008] px-1 py-px border border-[#00000055]"
+          key={`${stableId}-${mod}`}
+        >
+          {ModifierToElement[mod]}
+        </kbd>
+      ))}
+      <kbd className="text-sm leading-none rounded-[3px] bg-[#00000008] px-1 py-px border border-[#00000055] uppercase">
+        {children}
+      </kbd>
+    </span>
+  );
+};
+
 function App() {
   return (
     <div className="min-h-screen grid place-items-center">
       <div className="flex flex-col gap-8 items-center justify-center">
-        <Button>Hej do</Button>
+        <Button
+          left={<Add />}
+          shortcut={{
+            key: "N",
+            modifier: ["Meta"],
+          }}
+          right={<Add />}
+        >
+          Hej do
+        </Button>
       </div>
       <Dialoguer />
     </div>
