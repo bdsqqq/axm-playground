@@ -1,17 +1,20 @@
 import * as React from "react";
 
 import { Slot } from "@radix-ui/react-slot";
-import * as Toggle from '@radix-ui/react-toggle';
+import * as Toggle from "@radix-ui/react-toggle";
 import { type ToggleProps, PrimitiveButtonProps } from "@radix-ui/react-toggle";
 import { cva, type VariantProps } from "class-variance-authority";
 
 import { cn } from "../util";
 import { Spinner } from "../icons";
 
-type TogglePropsWithoutPrimitiveButtonProps = Omit<ToggleProps, keyof PrimitiveButtonProps>;
+type TogglePropsWithoutPrimitiveButtonProps = Omit<
+  ToggleProps,
+  keyof PrimitiveButtonProps
+>;
 type TogglePropsWithValuesAsNever = {
   [K in keyof TogglePropsWithoutPrimitiveButtonProps]: never;
-}; 
+};
 
 /** Map of modifier keys to their KeyboardEvent properties
  * {@link https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/getModifierState MDN Reference}
@@ -151,20 +154,27 @@ interface BaseButtonProps {
 }
 
 export interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,  BaseButtonProps, TogglePropsWithValuesAsNever,
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+    BaseButtonProps,
+    TogglePropsWithValuesAsNever,
     VariantProps<typeof buttonVariants> {
   asChild?: boolean;
   toggle?: false;
 }
 
 export interface ToggleButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,  BaseButtonProps, ToggleProps,
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+    BaseButtonProps,
+    ToggleProps,
     VariantProps<typeof buttonVariants> {
   asChild?: false;
   toggle: true;
 }
 
-export const Button = React.forwardRef<HTMLButtonElement, ButtonProps | ToggleButtonProps>(
+export const Button = React.forwardRef<
+  HTMLButtonElement,
+  ButtonProps | ToggleButtonProps
+>(
   (
     {
       className,
