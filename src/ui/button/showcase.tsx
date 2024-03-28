@@ -1,6 +1,7 @@
 import { Button, ButtonGroup, ButtonProps } from "./button";
 import { Add, ChevronDown } from "../icons";
 import { useState } from "react";
+import * as ToggleGroup from "@radix-ui/react-toggle-group";
 
 export const ButtonShowcase = () => {
   return (
@@ -218,9 +219,43 @@ export const ButtonShowcase = () => {
         <section>
           <h2>Toggle Button</h2>
           <div className="flex gap-2">
-            <Button toggle size="sm" left={<Add />} defaultPressed={false} variant="primary" />
-            <Button toggle size="sm" left={<Add />} defaultPressed={false} variant="secondary" />
-            <Button toggle size="sm" left={<Add />} defaultPressed={false} variant="tertiary" />
+            <Button
+              toggle
+              size="sm"
+              left={<Add />}
+              defaultPressed={false}
+              variant="primary"
+            />
+            <Button
+              toggle
+              size="sm"
+              left={<Add />}
+              defaultPressed={false}
+              variant="secondary"
+            />
+            <Button
+              toggle
+              size="sm"
+              left={<Add />}
+              defaultPressed={false}
+              variant="tertiary"
+            />
+          </div>
+        </section>
+        <section>
+          <h2>Toggle Button in ToggleGroup</h2>
+          <div className="flex gap-2">
+            <ToggleGroup.Root type="single" defaultValue="1">
+              <ToggleGroup.Item asChild value="1">
+                <Button toggle size="sm" left={<Add />} variant="primary" />
+              </ToggleGroup.Item>
+              <ToggleGroup.Item asChild value="2">
+                <Button toggle size="sm" left={<Add />} variant="secondary" />
+              </ToggleGroup.Item>{" "}
+              <ToggleGroup.Item asChild value="3">
+                <Button toggle size="sm" left={<Add />} variant="tertiary" />
+              </ToggleGroup.Item>
+            </ToggleGroup.Root>
           </div>
         </section>
       </div>
@@ -410,9 +445,40 @@ export const ButtonShowcase = () => {
         <section>
           <h2>Toggle Button</h2>
           <div className="flex gap-2">
-            <Button toggle left={<Add />} defaultPressed={false} variant="primary" />
-            <Button toggle left={<Add />} defaultPressed={false} variant="secondary" />
-            <Button toggle left={<Add />} defaultPressed={false} variant="tertiary" />
+            <Button
+              toggle
+              left={<Add />}
+              defaultPressed={false}
+              variant="primary"
+            />
+            <Button
+              toggle
+              left={<Add />}
+              defaultPressed={false}
+              variant="secondary"
+            />
+            <Button
+              toggle
+              left={<Add />}
+              defaultPressed={false}
+              variant="tertiary"
+            />
+          </div>
+        </section>
+        <section>
+          <h2>Toggle Button in ToggleGroup</h2>
+          <div className="flex gap-2">
+            <ToggleGroup.Root type="single" defaultValue="1">
+              <ToggleGroup.Item asChild value="1">
+                <Button toggle left={<Add />} variant="primary" />
+              </ToggleGroup.Item>
+              <ToggleGroup.Item asChild value="2">
+                <Button toggle left={<Add />} variant="secondary" />
+              </ToggleGroup.Item>{" "}
+              <ToggleGroup.Item asChild value="3">
+                <Button toggle left={<Add />} variant="tertiary" />
+              </ToggleGroup.Item>
+            </ToggleGroup.Root>
           </div>
         </section>
       </div>
