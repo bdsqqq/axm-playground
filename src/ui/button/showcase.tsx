@@ -251,7 +251,7 @@ export const ButtonShowcase = () => {
               </ToggleGroup.Item>
               <ToggleGroup.Item asChild value="2">
                 <Button toggle size="sm" left={<Add />} variant="secondary" />
-              </ToggleGroup.Item>{" "}
+              </ToggleGroup.Item>
               <ToggleGroup.Item asChild value="3">
                 <Button toggle size="sm" left={<Add />} variant="tertiary" />
               </ToggleGroup.Item>
@@ -474,7 +474,7 @@ export const ButtonShowcase = () => {
               </ToggleGroup.Item>
               <ToggleGroup.Item asChild value="2">
                 <Button toggle left={<Add />} variant="secondary" />
-              </ToggleGroup.Item>{" "}
+              </ToggleGroup.Item>
               <ToggleGroup.Item asChild value="3">
                 <Button toggle left={<Add />} variant="tertiary" />
               </ToggleGroup.Item>
