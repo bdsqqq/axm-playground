@@ -130,6 +130,14 @@ export interface ButtonProps
     key: string;
     modifier?: ModifierKey[];
   };
+  /**
+   * minimum artificial delays
+   * - minimumDuration: shows spinner for at least 500ms
+   * - delay: don't show spinner if response is less than 100ms
+   * - immediate: normal behavior
+   * @default "delay"
+   */
+  loadingStrategy?: "minimumDuration" | "delay" | "immediate";
 }
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
@@ -139,15 +147,55 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       variant,
       size,
       asChild = false,
-      loading,
+      loading: _loading,
       left,
       right,
       shortcut,
       children,
+      loadingStrategy = "delay",
       ...props
     },
     ref
   ) => {
+    // loading strategy is based on https://x.com/JohnPhamous/status/1679271160570327040?s=20
+    const [loading, setLoading] = React.useState(_loading);
+    const artificialDelayPromiseRef = React.useRef<Promise<void>>();
+
+    const minimumDurationCallback = React.useCallback(() => {
+      setLoading(true);
+      artificialDelayPromiseRef.current = new Promise((resolve) =>
+        setTimeout(resolve, 500)
+      );
+    }, []);
+
+    const delayCallback = React.useCallback(() => {
+      artificialDelayPromiseRef.current = new Promise((resolve) =>
+        setTimeout(() => {
+          setLoading(true);
+          resolve();
+        }, 100)
+      );
+    }, []);
+
+    React.useEffect(() => {
+      if (loadingStrategy === "immediate") {
+        setLoading(_loading);
+        return;
+      }
+
+      if (_loading) {
+        if (loadingStrategy === "minimumDuration") {
+          minimumDurationCallback();
+        } else if (loadingStrategy === "delay") {
+          delayCallback();
+        }
+      } else {
+        void artificialDelayPromiseRef.current?.then(() => {
+          setLoading(false);
+        });
+      }
+    }, [_loading, loadingStrategy, minimumDurationCallback, delayCallback]);
+
     const Comp = asChild ? Slot : "button";
     const Left = loading ? <Spinner className="animate-spin" /> : left;
 
