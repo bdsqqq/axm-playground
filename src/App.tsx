@@ -466,7 +466,7 @@ function App() {
       </section>
       <hr className="border-gray-06 w-full" />
       <div className="flex flex-col gap-8 items-center justify-center">
-        <ButtonShowcase />B
+        <ButtonShowcase />
       </div>
       <Dialoguer />
     </div>
