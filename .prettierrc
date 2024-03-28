@@ -3,7 +3,7 @@
   "plugins": ["prettier-plugin-tailwindcss"],
   "printWidth": 80,
   "singleQuote": true,
-  "tailwindConfig": "./tailwind.config.js",
+  "tailwindConfig": "./tailwind.config.ts",
   "tailwindFunctions": ["classNames", "cn", "cva"],
   "trailingComma": "es5"
 }
