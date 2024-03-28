@@ -12,13 +12,13 @@ const ButtonShowcase = () => {
           <h2>Button</h2>
           <div className="flex gap-2">
             <Button size="sm" variant="primary">
-              Button
+              Label
             </Button>
             <Button size="sm" variant="secondary">
-              Button
+              Label
             </Button>
             <Button size="sm" variant="tertiary">
-              Button
+              Label
             </Button>
           </div>
         </section>
@@ -26,13 +26,13 @@ const ButtonShowcase = () => {
           <h2>Button disabled</h2>
           <div className="flex gap-2">
             <Button size="sm" disabled variant="primary">
-              Button
+              Label
             </Button>
             <Button size="sm" disabled variant="secondary">
-              Button
+              Label
             </Button>
             <Button size="sm" disabled variant="tertiary">
-              Button
+              Label
             </Button>
           </div>
         </section>
@@ -56,13 +56,13 @@ const ButtonShowcase = () => {
           <h2>Button with icon</h2>
           <div className="flex gap-2">
             <Button size="sm" left={<Add />} variant="primary">
-              Button
+              Label
             </Button>
             <Button size="sm" left={<Add />} variant="secondary">
-              Button
+              Label
             </Button>
             <Button size="sm" left={<Add />} variant="tertiary">
-              Button
+              Label
             </Button>
           </div>
         </section>
@@ -70,13 +70,13 @@ const ButtonShowcase = () => {
           <h2>Button with icon right</h2>
           <div className="flex gap-2">
             <Button size="sm" right={<ChevronDown />} variant="primary">
-              Button
+              Label
             </Button>
             <Button size="sm" right={<ChevronDown />} variant="secondary">
-              Button
+              Label
             </Button>
             <Button size="sm" right={<ChevronDown />} variant="tertiary">
-              Button
+              Label
             </Button>
           </div>
         </section>
@@ -84,13 +84,13 @@ const ButtonShowcase = () => {
           <h2>Button loading</h2>
           <div className="flex gap-2">
             <Button size="sm" loading variant="primary">
-              Button
+              Label
             </Button>
             <Button size="sm" loading variant="secondary">
-              Button
+              Label
             </Button>
             <Button size="sm" loading variant="tertiary">
-              Button
+              Label
             </Button>
           </div>
         </section>
@@ -98,7 +98,7 @@ const ButtonShowcase = () => {
           <h2>Button with icon right loading</h2>
           <div className="flex gap-2">
             <Button size="sm" loading right={<ChevronDown />} variant="primary">
-              Button
+              Label
             </Button>
             <Button
               size="sm"
@@ -106,7 +106,7 @@ const ButtonShowcase = () => {
               right={<ChevronDown />}
               variant="secondary"
             >
-              Button
+              Label
             </Button>
             <Button
               size="sm"
@@ -114,7 +114,7 @@ const ButtonShowcase = () => {
               right={<ChevronDown />}
               variant="tertiary"
             >
-              Button
+              Label
             </Button>
           </div>
         </section>
@@ -129,7 +129,7 @@ const ButtonShowcase = () => {
               }}
               variant="primary"
             >
-              Button
+              Label
             </Button>
             <Button
               size="sm"
@@ -139,7 +139,7 @@ const ButtonShowcase = () => {
               }}
               variant="secondary"
             >
-              Button
+              Label
             </Button>
             <Button
               size="sm"
@@ -149,7 +149,7 @@ const ButtonShowcase = () => {
               }}
               variant="tertiary"
             >
-              Button
+              Label
             </Button>
           </div>
         </section>
@@ -165,7 +165,7 @@ const ButtonShowcase = () => {
               }}
               variant="primary"
             >
-              Button
+              Label
             </Button>
             <Button
               size="sm"
@@ -176,7 +176,7 @@ const ButtonShowcase = () => {
               }}
               variant="secondary"
             >
-              Button
+              Label
             </Button>
             <Button
               size="sm"
@@ -187,7 +187,7 @@ const ButtonShowcase = () => {
               }}
               variant="tertiary"
             >
-              Button
+              Label
             </Button>
           </div>
         </section>
@@ -196,21 +196,21 @@ const ButtonShowcase = () => {
           <div className="flex gap-2">
             <ButtonGroup>
               <Button size="sm" variant="primary">
-                Button
+                Label
               </Button>
               <Button size="sm" left={<Add />} variant={"primary"} />
             </ButtonGroup>
 
             <ButtonGroup>
               <Button size="sm" variant="secondary">
-                Button
+                Label
               </Button>
               <Button size="sm" left={<Add />} variant={"secondary"} />
             </ButtonGroup>
 
             <ButtonGroup>
               <Button size="sm" variant="tertiary">
-                Button
+                Label
               </Button>
               <Button size="sm" left={<Add />} variant={"tertiary"} />
             </ButtonGroup>
@@ -223,22 +223,22 @@ const ButtonShowcase = () => {
         <section>
           <h2>Button</h2>
           <div className="flex gap-2">
-            <Button variant="primary">Button</Button>
-            <Button variant="secondary">Button</Button>
-            <Button variant="tertiary">Button</Button>
+            <Button variant="primary">Label</Button>
+            <Button variant="secondary">Label</Button>
+            <Button variant="tertiary">Label</Button>
           </div>
         </section>
         <section>
           <h2>Button disabled</h2>
           <div className="flex gap-2">
             <Button disabled variant="primary">
-              Button
+              Label
             </Button>
             <Button disabled variant="secondary">
-              Button
+              Label
             </Button>
             <Button disabled variant="tertiary">
-              Button
+              Label
             </Button>
           </div>
         </section>
@@ -262,13 +262,13 @@ const ButtonShowcase = () => {
           <h2>Button with icon</h2>
           <div className="flex gap-2">
             <Button left={<Add />} variant="primary">
-              Button
+              Label
             </Button>
             <Button left={<Add />} variant="secondary">
-              Button
+              Label
             </Button>
             <Button left={<Add />} variant="tertiary">
-              Button
+              Label
             </Button>
           </div>
         </section>
@@ -276,13 +276,13 @@ const ButtonShowcase = () => {
           <h2>Button with icon right</h2>
           <div className="flex gap-2">
             <Button right={<ChevronDown />} variant="primary">
-              Button
+              Label
             </Button>
             <Button right={<ChevronDown />} variant="secondary">
-              Button
+              Label
             </Button>
             <Button right={<ChevronDown />} variant="tertiary">
-              Button
+              Label
             </Button>
           </div>
         </section>
@@ -290,13 +290,13 @@ const ButtonShowcase = () => {
           <h2>Button loading</h2>
           <div className="flex gap-2">
             <Button loading variant="primary">
-              Button
+              Label
             </Button>
             <Button loading variant="secondary">
-              Button
+              Label
             </Button>
             <Button loading variant="tertiary">
-              Button
+              Label
             </Button>
           </div>
         </section>
@@ -304,13 +304,13 @@ const ButtonShowcase = () => {
           <h2>Button with icon right loading</h2>
           <div className="flex gap-2">
             <Button loading right={<ChevronDown />} variant="primary">
-              Button
+              Label
             </Button>
             <Button loading right={<ChevronDown />} variant="secondary">
-              Button
+              Label
             </Button>
             <Button loading right={<ChevronDown />} variant="tertiary">
-              Button
+              Label
             </Button>
           </div>
         </section>
@@ -324,7 +324,7 @@ const ButtonShowcase = () => {
               }}
               variant="primary"
             >
-              Button
+              Label
             </Button>
             <Button
               shortcut={{
@@ -333,7 +333,7 @@ const ButtonShowcase = () => {
               }}
               variant="secondary"
             >
-              Button
+              Label
             </Button>
             <Button
               shortcut={{
@@ -342,7 +342,7 @@ const ButtonShowcase = () => {
               }}
               variant="tertiary"
             >
-              Button
+              Label
             </Button>
           </div>
         </section>
@@ -357,7 +357,7 @@ const ButtonShowcase = () => {
               }}
               variant="primary"
             >
-              Button
+              Label
             </Button>
             <Button
               right={<ChevronDown />}
@@ -367,7 +367,7 @@ const ButtonShowcase = () => {
               }}
               variant="secondary"
             >
-              Button
+              Label
             </Button>
             <Button
               right={<ChevronDown />}
@@ -377,7 +377,7 @@ const ButtonShowcase = () => {
               }}
               variant="tertiary"
             >
-              Button
+              Label
             </Button>
           </div>
         </section>
@@ -385,17 +385,17 @@ const ButtonShowcase = () => {
           <h2>Button group</h2>
           <div className="flex gap-2">
             <ButtonGroup>
-              <Button variant="primary">Button</Button>
+              <Button variant="primary">Label</Button>
               <Button left={<Add />} variant={"primary"} />
             </ButtonGroup>
 
             <ButtonGroup>
-              <Button variant="secondary">Button</Button>
+              <Button variant="secondary">Label</Button>
               <Button left={<Add />} variant={"secondary"} />
             </ButtonGroup>
 
             <ButtonGroup>
-              <Button variant="tertiary">Button</Button>
+              <Button variant="tertiary">Label</Button>
               <Button left={<Add />} variant={"tertiary"} />
             </ButtonGroup>
           </div>
