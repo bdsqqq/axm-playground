@@ -65,11 +65,49 @@ export const ModifierKeys = [
   "Symbol",
 ] as const;
 
+const ModifierToElement = {
+  Accel: "⌘",
+  Alt: "⌥",
+  AltGraph: "AltGr",
+  CapsLock: "Caps",
+  Control: "Ctrl",
+  Fn: "Fn",
+  Meta: "⌘",
+  NumLock: "Num",
+  OS: "OS",
+  ScrollLock: "Scroll",
+  Shift: "⇧",
+  Symbol: "Sym",
+} as const;
+
+const Shortcut = ({
+  children,
+  modifier,
+}: {
+  children: string;
+  modifier?: ModifierKey[];
+}) => {
+  const stableId = React.useId();
+
+  return (
+    <span className="flex items-center gap-0.5">
+      {modifier?.map((mod) => (
+        <kbd
+          className="text-sm leading-none rounded-[3px] bg-[#00000008] px-1 py-px border border-[#00000055]"
+          key={`${stableId}-${mod}`}
+        >
+          {ModifierToElement[mod]}
+        </kbd>
+      ))}
+      <kbd className="text-sm leading-none rounded-[3px] bg-[#00000008] px-1 py-px border border-[#00000055] uppercase">
+        {children}
+      </kbd>
+    </span>
+  );
+};
+
 const buttonVariants = cva(
-  [
-    "inline-flex items-center gap-2 justify-center border border-transparent whitespace-nowrap rounded transition-all duration-[70ms]",
-    "active:transform active:scale-[0.98]",
-  ],
+  "inline-flex items-center gap-2 justify-center border border-transparent whitespace-nowrap rounded transition-all duration-[70ms]",
   {
     variants: {
       variant: {
@@ -133,11 +171,6 @@ export interface ButtonProps
   };
 }
 
-// button has the following slots:
-// left (icon, loading)
-// label
-// shortcut
-// right (icon, usually reserved for chevron)
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   (
     {
@@ -164,12 +197,14 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         {...props}
       >
         {Left}
-        <span className="inline-flex gap-1">
-          {children}
-          {shortcut && (
-            <Shortcut modifier={shortcut.modifier}>{shortcut.key}</Shortcut>
-          )}
-        </span>
+        {children || shortcut ? (
+          <span className="inline-flex gap-1">
+            {children}
+            {shortcut && (
+              <Shortcut modifier={shortcut.modifier}>{shortcut.key}</Shortcut>
+            )}
+          </span>
+        ) : null}
         {right}
       </Comp>
     );
@@ -177,44 +212,36 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 );
 Button.displayName = "Button";
 
-const ModifierToElement = {
-  Accel: "⌘",
-  Alt: "⌥",
-  AltGraph: "AltGr",
-  CapsLock: "Caps",
-  Control: "Ctrl",
-  Fn: "Fn",
-  Meta: "⌘",
-  NumLock: "Num",
-  OS: "OS",
-  ScrollLock: "Scroll",
-  Shift: "⇧",
-  Symbol: "Sym",
-} as const;
-
-const Shortcut = ({
-  children,
-  modifier,
-}: {
-  children: string;
-  modifier?: ModifierKey[];
-}) => {
+/**
+ * Group of buttons
+ * Takes buttons, removes the borders that would get doubled, makes only the outer ones rounded.
+ */
+const ButtonGroup = ({ children }: { children: React.ReactNode }) => {
   const stableId = React.useId();
 
   return (
-    <span className="flex items-center gap-0.5">
-      {modifier?.map((mod) => (
-        <kbd
-          className="text-sm leading-none rounded-[3px] bg-[#00000008] px-1 py-px border border-[#00000055]"
-          key={`${stableId}-${mod}`}
-        >
-          {ModifierToElement[mod]}
-        </kbd>
-      ))}
-      <kbd className="text-sm leading-none rounded-[3px] bg-[#00000008] px-1 py-px border border-[#00000055] uppercase">
-        {children}
-      </kbd>
-    </span>
+    <div className="flex">
+      {React.Children.map(children, (child, index) => {
+        const isFirst = index === 0;
+        const isLast = index === React.Children.count(children) - 1;
+
+        const childWithProps = React.cloneElement(child as React.ReactElement, {
+          className: cn(
+            (child as React.ReactElement).props.className,
+            !isFirst && "rounded-l-none",
+            !isLast && "rounded-r-none"
+          ),
+          key: `${stableId}-${index}`,
+        });
+
+        return (
+          <>
+            {childWithProps}
+            {!isLast && <span className="w-px h-auto bg-gray-07" />}
+          </>
+        );
+      })}
+    </div>
   );
 };
 
@@ -232,6 +259,21 @@ function App() {
         >
           Hej do
         </Button>
+        <Button left={<Add />} />
+
+        <ButtonGroup>
+          <Button
+            left={<Add />}
+            shortcut={{
+              key: "N",
+              modifier: ["Meta"],
+            }}
+            right={<Add />}
+          >
+            Hej do
+          </Button>
+          <Button left={<Add />} />
+        </ButtonGroup>
       </div>
       <Dialoguer />
     </div>
