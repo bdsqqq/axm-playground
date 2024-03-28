@@ -10,6 +10,12 @@ const config: Config = {
         "2xl": "1400px",
       },
     },
+    fontSize: {
+      xs: ["0.625rem", { lineHeight: "1rem" }],
+      sm: ["0.75rem", { lineHeight: "1rem" }],
+      md: ["0.875rem", { lineHeight: "1.25rem" }],
+      lg: ["1rem", { lineHeight: "1.5rem" }],
+    },
     colors: {
       transparent: "transparent",
       current: "currentColor",
