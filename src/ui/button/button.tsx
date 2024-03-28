@@ -54,13 +54,13 @@ export const Shortcut = ({
     <span className="flex items-center gap-0.5">
       {modifier?.map((mod) => (
         <kbd
-          className="text-sm leading-none rounded-[3px] bg-[#00000008] px-1 py-px border border-[#00000055]"
+          className="rounded-[3px] border border-[#00000055] bg-[#00000008] px-1 py-px text-sm leading-none"
           key={`${stableId}-${mod}`}
         >
           {ModifierToElement[mod]}
         </kbd>
       ))}
-      <kbd className="text-sm leading-none rounded-[3px] bg-[#00000008] px-1 py-px border border-[#00000055] uppercase">
+      <kbd className="rounded-[3px] border border-[#00000055] bg-[#00000008] px-1 py-px text-sm uppercase leading-none">
         {children}
       </kbd>
     </span>
@@ -116,7 +116,7 @@ const buttonVariants = cva(
       intent: "neutral",
       size: "md",
     },
-  }
+  },
 );
 
 export interface ButtonProps
@@ -155,7 +155,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       loadingStrategy = "delay",
       ...props
     },
-    ref
+    ref,
   ) => {
     // loading strategy is based on https://x.com/JohnPhamous/status/1679271160570327040?s=20
     const [loading, setLoading] = React.useState(_loading);
@@ -164,7 +164,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     const minimumDurationCallback = React.useCallback(() => {
       setLoading(true);
       artificialDelayPromiseRef.current = new Promise((resolve) =>
-        setTimeout(resolve, 500)
+        setTimeout(resolve, 500),
       );
     }, []);
 
@@ -173,7 +173,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         setTimeout(() => {
           setLoading(true);
           resolve();
-        }, 100)
+        }, 100),
       );
     }, []);
 
@@ -217,7 +217,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         {right}
       </Comp>
     );
-  }
+  },
 );
 Button.displayName = "Button";
 
@@ -238,7 +238,7 @@ export const ButtonGroup = ({ children }: { children: React.ReactNode }) => {
           className: cn(
             (child as React.ReactElement).props.className,
             !isFirst && "rounded-l-none border-l-0",
-            !isLast && "rounded-r-none border-r-0"
+            !isLast && "rounded-r-none border-r-0",
           ),
           key: `${stableId}-${index}`,
         });
@@ -246,7 +246,7 @@ export const ButtonGroup = ({ children }: { children: React.ReactNode }) => {
         return (
           <>
             {childWithProps}
-            {!isLast && <span className="w-px h-auto bg-gray-07" />}
+            {!isLast && <span className="h-auto w-px bg-gray-07" />}
           </>
         );
       })}
