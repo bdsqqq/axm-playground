@@ -1,4 +1,4 @@
-import { dialog } from "./ui/dialog/Dialog";
+import { dialog } from './ui/dialog/Dialog';
 
 export const NestedThing = () => {
   return (

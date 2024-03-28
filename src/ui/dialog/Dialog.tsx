@@ -1,7 +1,7 @@
-import * as Dialog from "@radix-ui/react-dialog";
+import * as Dialog from '@radix-ui/react-dialog';
 
-import { useStore } from "zustand";
-import { createStore } from "zustand/vanilla";
+import { useStore } from 'zustand';
+import { createStore } from 'zustand/vanilla';
 
 interface DialogState {
   open: boolean;
@@ -45,10 +45,10 @@ export const dialog = ({
   description = null,
   triggerElement = null,
 }: {
-  content: DialogState["content"];
-  title?: DialogState["title"];
-  description?: DialogState["description"];
-  triggerElement?: DialogState["triggerElement"];
+  content: DialogState['content'];
+  title?: DialogState['title'];
+  description?: DialogState['description'];
+  triggerElement?: DialogState['triggerElement'];
 }) => {
   dialogStore.setState({
     open: true,
@@ -80,7 +80,7 @@ export const Dialoguer = () => {
         <Dialog.Overlay className="data-[state=open]:animate-overlayShow fixed inset-0 bg-gray-a-02 backdrop-blur-sm" />
         <Dialog.Content
           onCloseAutoFocus={() => {
-            console.log("onCloseAutoFocus", triggerElement);
+            console.log('onCloseAutoFocus', triggerElement);
             triggerElement?.focus();
             dialogStore.setState({ triggerElement: null });
           }}

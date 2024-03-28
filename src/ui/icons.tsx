@@ -1,4 +1,4 @@
-export const Spinner = ({ ...props }: React.ComponentProps<"svg">) => (
+export const Spinner = ({ ...props }: React.ComponentProps<'svg'>) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="16"
@@ -14,7 +14,7 @@ export const Spinner = ({ ...props }: React.ComponentProps<"svg">) => (
   </svg>
 );
 
-export const Add = ({ ...props }: React.ComponentProps<"svg">) => (
+export const Add = ({ ...props }: React.ComponentProps<'svg'>) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="16"
@@ -37,7 +37,7 @@ export const Add = ({ ...props }: React.ComponentProps<"svg">) => (
   </svg>
 );
 
-export const ChevronDown = ({ ...props }: React.ComponentProps<"svg">) => (
+export const ChevronDown = ({ ...props }: React.ComponentProps<'svg'>) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="16"

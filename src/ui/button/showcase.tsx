@@ -1,7 +1,7 @@
-import { Button, ButtonGroup, ButtonProps } from "./button";
-import { Add, ChevronDown } from "../icons";
-import { useState } from "react";
-import * as ToggleGroup from "@radix-ui/react-toggle-group";
+import { Button, ButtonGroup, ButtonProps } from './button';
+import { Add, ChevronDown } from '../icons';
+import { useState } from 'react';
+import * as ToggleGroup from '@radix-ui/react-toggle-group';
 
 export const ButtonShowcase = () => {
   return (
@@ -124,8 +124,8 @@ export const ButtonShowcase = () => {
             <Button
               size="sm"
               shortcut={{
-                key: "A",
-                modifier: ["Meta", "Shift"],
+                key: 'A',
+                modifier: ['Meta', 'Shift'],
               }}
               variant="primary"
             >
@@ -134,8 +134,8 @@ export const ButtonShowcase = () => {
             <Button
               size="sm"
               shortcut={{
-                key: "A",
-                modifier: ["Meta", "Shift"],
+                key: 'A',
+                modifier: ['Meta', 'Shift'],
               }}
               variant="secondary"
             >
@@ -144,8 +144,8 @@ export const ButtonShowcase = () => {
             <Button
               size="sm"
               shortcut={{
-                key: "A",
-                modifier: ["Meta", "Shift"],
+                key: 'A',
+                modifier: ['Meta', 'Shift'],
               }}
               variant="tertiary"
             >
@@ -160,8 +160,8 @@ export const ButtonShowcase = () => {
               size="sm"
               right={<ChevronDown />}
               shortcut={{
-                key: "A",
-                modifier: ["Meta", "Shift"],
+                key: 'A',
+                modifier: ['Meta', 'Shift'],
               }}
               variant="primary"
             >
@@ -171,8 +171,8 @@ export const ButtonShowcase = () => {
               size="sm"
               right={<ChevronDown />}
               shortcut={{
-                key: "A",
-                modifier: ["Meta", "Shift"],
+                key: 'A',
+                modifier: ['Meta', 'Shift'],
               }}
               variant="secondary"
             >
@@ -182,8 +182,8 @@ export const ButtonShowcase = () => {
               size="sm"
               right={<ChevronDown />}
               shortcut={{
-                key: "A",
-                modifier: ["Meta", "Shift"],
+                key: 'A',
+                modifier: ['Meta', 'Shift'],
               }}
               variant="tertiary"
             >
@@ -198,21 +198,21 @@ export const ButtonShowcase = () => {
               <Button size="sm" variant="primary">
                 Label
               </Button>
-              <Button size="sm" left={<Add />} variant={"primary"} />
+              <Button size="sm" left={<Add />} variant={'primary'} />
             </ButtonGroup>
 
             <ButtonGroup>
               <Button size="sm" variant="secondary">
                 Label
               </Button>
-              <Button size="sm" left={<Add />} variant={"secondary"} />
+              <Button size="sm" left={<Add />} variant={'secondary'} />
             </ButtonGroup>
 
             <ButtonGroup>
               <Button size="sm" variant="tertiary">
                 Label
               </Button>
-              <Button size="sm" left={<Add />} variant={"tertiary"} />
+              <Button size="sm" left={<Add />} variant={'tertiary'} />
             </ButtonGroup>
           </div>
         </section>
@@ -361,8 +361,8 @@ export const ButtonShowcase = () => {
           <div className="flex gap-2">
             <Button
               shortcut={{
-                key: "A",
-                modifier: ["Meta", "Shift"],
+                key: 'A',
+                modifier: ['Meta', 'Shift'],
               }}
               variant="primary"
             >
@@ -370,8 +370,8 @@ export const ButtonShowcase = () => {
             </Button>
             <Button
               shortcut={{
-                key: "A",
-                modifier: ["Meta", "Shift"],
+                key: 'A',
+                modifier: ['Meta', 'Shift'],
               }}
               variant="secondary"
             >
@@ -379,8 +379,8 @@ export const ButtonShowcase = () => {
             </Button>
             <Button
               shortcut={{
-                key: "A",
-                modifier: ["Meta", "Shift"],
+                key: 'A',
+                modifier: ['Meta', 'Shift'],
               }}
               variant="tertiary"
             >
@@ -394,8 +394,8 @@ export const ButtonShowcase = () => {
             <Button
               right={<ChevronDown />}
               shortcut={{
-                key: "A",
-                modifier: ["Meta", "Shift"],
+                key: 'A',
+                modifier: ['Meta', 'Shift'],
               }}
               variant="primary"
             >
@@ -404,8 +404,8 @@ export const ButtonShowcase = () => {
             <Button
               right={<ChevronDown />}
               shortcut={{
-                key: "A",
-                modifier: ["Meta", "Shift"],
+                key: 'A',
+                modifier: ['Meta', 'Shift'],
               }}
               variant="secondary"
             >
@@ -414,8 +414,8 @@ export const ButtonShowcase = () => {
             <Button
               right={<ChevronDown />}
               shortcut={{
-                key: "A",
-                modifier: ["Meta", "Shift"],
+                key: 'A',
+                modifier: ['Meta', 'Shift'],
               }}
               variant="tertiary"
             >
@@ -428,17 +428,17 @@ export const ButtonShowcase = () => {
           <div className="flex gap-2">
             <ButtonGroup>
               <Button variant="primary">Label</Button>
-              <Button left={<Add />} variant={"primary"} />
+              <Button left={<Add />} variant={'primary'} />
             </ButtonGroup>
 
             <ButtonGroup>
               <Button variant="secondary">Label</Button>
-              <Button left={<Add />} variant={"secondary"} />
+              <Button left={<Add />} variant={'secondary'} />
             </ButtonGroup>
 
             <ButtonGroup>
               <Button variant="tertiary">Label</Button>
-              <Button left={<Add />} variant={"tertiary"} />
+              <Button left={<Add />} variant={'tertiary'} />
             </ButtonGroup>
           </div>
         </section>
@@ -489,7 +489,7 @@ export const ButtonShowcase = () => {
 const ButtonWithLatency = ({
   latency,
   ...props
-}: { latency: number } & Omit<ButtonProps, "loading">) => {
+}: { latency: number } & Omit<ButtonProps, 'loading'>) => {
   const [loading, setLoading] = useState(false);
 
   return (
@@ -508,7 +508,7 @@ const ButtonWithLatency = ({
 
 export const LatencyShowcase = () => {
   const latencies = [1, 50, 350, 1000];
-  const loadingStrategies = ["minimumDuration", "delay", "immediate"] as const;
+  const loadingStrategies = ['minimumDuration', 'delay', 'immediate'] as const;
 
   return (
     <section className="flex flex-col gap-4">

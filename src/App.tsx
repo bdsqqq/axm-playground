@@ -1,5 +1,5 @@
-import { ButtonShowcase, LatencyShowcase } from "./ui/button/showcase";
-import { Dialoguer } from "./ui/dialog/Dialog";
+import { ButtonShowcase, LatencyShowcase } from './ui/button/showcase';
+import { Dialoguer } from './ui/dialog/Dialog';
 
 function App() {
   return (

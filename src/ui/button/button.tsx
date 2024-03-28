@@ -1,12 +1,12 @@
-import * as React from "react";
+import * as React from 'react';
 
-import { Slot } from "@radix-ui/react-slot";
-import * as Toggle from "@radix-ui/react-toggle";
-import { type ToggleProps, PrimitiveButtonProps } from "@radix-ui/react-toggle";
-import { cva, type VariantProps } from "class-variance-authority";
+import { Slot } from '@radix-ui/react-slot';
+import * as Toggle from '@radix-ui/react-toggle';
+import { type ToggleProps, PrimitiveButtonProps } from '@radix-ui/react-toggle';
+import { cva, type VariantProps } from 'class-variance-authority';
 
-import { cn } from "../util";
-import { Spinner } from "../icons";
+import { cn } from '../util';
+import { Spinner } from '../icons';
 
 type TogglePropsWithoutPrimitiveButtonProps = Omit<
   ToggleProps,
@@ -22,33 +22,33 @@ type TogglePropsWithValuesAsNever = {
 export type ModifierKey = (typeof ModifierKeys)[number];
 
 export const ModifierKeys = [
-  "Accel",
-  "Alt" /* Full Browser Support */,
-  "AltGraph" /* Full Browser Support */,
-  "CapsLock" /* Full Browser Support */,
-  "Control" /* Full Browser Support */,
-  "Fn",
-  "Meta" /* Full Browser Support */,
-  "NumLock",
-  "OS",
-  "ScrollLock",
-  "Shift" /* Full Browser Support */,
-  "Symbol",
+  'Accel',
+  'Alt' /* Full Browser Support */,
+  'AltGraph' /* Full Browser Support */,
+  'CapsLock' /* Full Browser Support */,
+  'Control' /* Full Browser Support */,
+  'Fn',
+  'Meta' /* Full Browser Support */,
+  'NumLock',
+  'OS',
+  'ScrollLock',
+  'Shift' /* Full Browser Support */,
+  'Symbol',
 ] as const;
 
 const ModifierToElement = {
-  Accel: "⌘",
-  Alt: "⌥",
-  AltGraph: "AltGr",
-  CapsLock: "Caps",
-  Control: "Ctrl",
-  Fn: "Fn",
-  Meta: "⌘",
-  NumLock: "Num",
-  OS: "OS",
-  ScrollLock: "Scroll",
-  Shift: "⇧",
-  Symbol: "Sym",
+  Accel: '⌘',
+  Alt: '⌥',
+  AltGraph: 'AltGr',
+  CapsLock: 'Caps',
+  Control: 'Ctrl',
+  Fn: 'Fn',
+  Meta: '⌘',
+  NumLock: 'Num',
+  OS: 'OS',
+  ScrollLock: 'Scroll',
+  Shift: '⇧',
+  Symbol: 'Sym',
 } as const;
 
 export const Shortcut = ({
@@ -78,61 +78,61 @@ export const Shortcut = ({
 };
 
 const buttonVariants = cva(
-  "inline-flex items-center gap-2 justify-center border border-transparent whitespace-nowrap rounded transition-all duration-[70ms]",
+  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded border border-transparent transition-all duration-[70ms]',
   {
     variants: {
       variant: {
-        primary: "",
-        secondary: "",
-        tertiary: "",
+        primary: '',
+        secondary: '',
+        tertiary: '',
       },
       size: {
-        sm: "px-1.5 py-1.5 h-7 min-w-7 text-sm",
-        md: "px-2 h-8 py-1.5 min-w-8 text-md",
+        sm: 'h-7 min-w-7 px-1.5 py-1.5 text-sm',
+        md: 'h-8 min-w-8 px-2 py-1.5 text-md',
       },
       intent: {
-        neutral: "",
-        danger: "",
+        neutral: '',
+        danger: '',
       },
     },
     compoundVariants: [
       {
-        variant: "primary",
-        intent: "neutral",
+        variant: 'primary',
+        intent: 'neutral',
         className: [
-          "text-gray-02 bg-gray-a-12 hover:bg-gray-a-11 focus-visible:bg-gray-a-11 border-gray-12 hover:border-gray-11 focus-visible:border-gray-11",
-          "data-[state=on]:bg-gray-a-11 data-[state=on]:hover:bg-gray-a-10 data-[state=on]:focus-visible:bg-gray-a-10 data-[state=on]:border-gray-11 data-[state=on]:hover:border-gray-10 data-[state=on]:focus-visible:border-gray-10",
-          "data-[state=off]:bg-gray-a-12 data-[state=off]:hover:bg-gray-a-11 data-[state=off]:focus-visible:bg-gray-a-11 data-[state=off]:border-gray-12 data-[state=off]:hover:border-gray-11 data-[state=off]:focus-visible:border-gray-11",
-          "disabled:text-gray-09 disabled:bg-gray-a-05 disabled:hover:bg-gray-a-05 disabled:focus-visible:bg-gray-a-05 disabled:border-gray-07 disabled:hover:border-gray-07 disabled:focus-visible:border-gray-07",
+          'border-gray-12 bg-gray-a-12 text-gray-02 hover:border-gray-11 hover:bg-gray-a-11 focus-visible:border-gray-11 focus-visible:bg-gray-a-11',
+          'data-[state=on]:border-gray-11 data-[state=on]:bg-gray-a-11 data-[state=on]:hover:border-gray-10 data-[state=on]:hover:bg-gray-a-10 data-[state=on]:focus-visible:border-gray-10 data-[state=on]:focus-visible:bg-gray-a-10',
+          'data-[state=off]:border-gray-12 data-[state=off]:bg-gray-a-12 data-[state=off]:hover:border-gray-11 data-[state=off]:hover:bg-gray-a-11 data-[state=off]:focus-visible:border-gray-11 data-[state=off]:focus-visible:bg-gray-a-11',
+          'disabled:border-gray-07 disabled:bg-gray-a-05 disabled:text-gray-09 disabled:hover:border-gray-07 disabled:hover:bg-gray-a-05 disabled:focus-visible:border-gray-07 disabled:focus-visible:bg-gray-a-05',
         ],
       },
       {
-        variant: "secondary",
-        intent: "neutral",
+        variant: 'secondary',
+        intent: 'neutral',
         className: [
-          "text-gray-12 bg-gray-a-02 hover:bg-gray-a-03 focus-visible:bg-gray-a-03 border-gray-a-06",
-          "data-[state=on]:bg-gray-a-05 data-[state=on]:hover:bg-gray-a-03 data-[state=on]:focus-visible:bg-gray-a-04 data-[state=on]:border-gray-a-06",
-          "data-[state=off]:bg-gray-a-02 data-[state=off]:hover:bg-gray-a-03 data-[state=off]:focus-visible:bg-gray-a-03 data-[state=off]:border-gray-a-06",
-          "disabled:text-gray-09 disabled:bg-gray-a-01 disabled:hover:bg-gray-a-01 disabled:focus-visible:bg-gray-a-01 disabled:border-gray-04 disabled:hover:border-gray-04 disabled:focus-visible:border-gray-04",
+          'border-gray-a-06 bg-gray-a-02 text-gray-12 hover:bg-gray-a-03 focus-visible:bg-gray-a-03',
+          'data-[state=on]:border-gray-a-06 data-[state=on]:bg-gray-a-05 data-[state=on]:hover:bg-gray-a-03 data-[state=on]:focus-visible:bg-gray-a-04',
+          'data-[state=off]:border-gray-a-06 data-[state=off]:bg-gray-a-02 data-[state=off]:hover:bg-gray-a-03 data-[state=off]:focus-visible:bg-gray-a-03',
+          'disabled:border-gray-04 disabled:bg-gray-a-01 disabled:text-gray-09 disabled:hover:border-gray-04 disabled:hover:bg-gray-a-01 disabled:focus-visible:border-gray-04 disabled:focus-visible:bg-gray-a-01',
         ],
       },
       {
-        variant: "tertiary",
-        intent: "neutral",
+        variant: 'tertiary',
+        intent: 'neutral',
         className: [
-          "text-gray-12 bg-gray-a-01 hover:bg-gray-a-03 focus-visible:bg-gray-a-03",
-          "data-[state=on]:bg-gray-a-05 data-[state=on]:hover:bg-gray-a-03 data-[state=on]:focus-visible:bg-gray-a-04",
-          "data-[state=off]:bg-gray-a-01 data-[state=off]:hover:bg-gray-a-03 data-[state=off]:focus-visible:bg-gray-a-03",
-          "disabled:text-gray-09 disabled:bg-gray-a-01 disabled:hover:bg-gray-a-01 disabled:focus-visible:bg-gray-a-01",
+          'bg-gray-a-01 text-gray-12 hover:bg-gray-a-03 focus-visible:bg-gray-a-03',
+          'data-[state=on]:bg-gray-a-05 data-[state=on]:hover:bg-gray-a-03 data-[state=on]:focus-visible:bg-gray-a-04',
+          'data-[state=off]:bg-gray-a-01 data-[state=off]:hover:bg-gray-a-03 data-[state=off]:focus-visible:bg-gray-a-03',
+          'disabled:bg-gray-a-01 disabled:text-gray-09 disabled:hover:bg-gray-a-01 disabled:focus-visible:bg-gray-a-01',
         ],
       },
     ],
     defaultVariants: {
-      variant: "primary",
-      intent: "neutral",
-      size: "md",
+      variant: 'primary',
+      intent: 'neutral',
+      size: 'md',
     },
-  },
+  }
 );
 
 interface BaseButtonProps {
@@ -150,7 +150,7 @@ interface BaseButtonProps {
    * - immediate: normal behavior
    * @default "delay"
    */
-  loadingStrategy?: "minimumDuration" | "delay" | "immediate";
+  loadingStrategy?: 'minimumDuration' | 'delay' | 'immediate';
 }
 
 export interface ButtonProps
@@ -186,11 +186,11 @@ export const Button = React.forwardRef<
       right,
       shortcut,
       children,
-      loadingStrategy = "delay",
+      loadingStrategy = 'delay',
       toggle,
       ...props
     },
-    ref,
+    ref
   ) => {
     // loading strategy is based on https://x.com/JohnPhamous/status/1679271160570327040?s=20
     const [loading, setLoading] = React.useState(_loading);
@@ -199,7 +199,7 @@ export const Button = React.forwardRef<
     const minimumDurationCallback = React.useCallback(() => {
       setLoading(true);
       artificialDelayPromiseRef.current = new Promise((resolve) =>
-        setTimeout(resolve, 500),
+        setTimeout(resolve, 500)
       );
     }, []);
 
@@ -208,20 +208,20 @@ export const Button = React.forwardRef<
         setTimeout(() => {
           setLoading(true);
           resolve();
-        }, 100),
+        }, 100)
       );
     }, []);
 
     React.useEffect(() => {
-      if (loadingStrategy === "immediate") {
+      if (loadingStrategy === 'immediate') {
         setLoading(_loading);
         return;
       }
 
       if (_loading) {
-        if (loadingStrategy === "minimumDuration") {
+        if (loadingStrategy === 'minimumDuration') {
           minimumDurationCallback();
-        } else if (loadingStrategy === "delay") {
+        } else if (loadingStrategy === 'delay') {
           delayCallback();
         }
       } else {
@@ -231,7 +231,7 @@ export const Button = React.forwardRef<
       }
     }, [_loading, loadingStrategy, minimumDurationCallback, delayCallback]);
 
-    const CompIfNotAsChild = toggle ? Toggle.Root : "button";
+    const CompIfNotAsChild = toggle ? Toggle.Root : 'button';
     const Comp = asChild ? Slot : CompIfNotAsChild;
     const Left = loading ? <Spinner className="animate-spin" /> : left;
 
@@ -253,9 +253,9 @@ export const Button = React.forwardRef<
         {right}
       </Comp>
     );
-  },
+  }
 );
-Button.displayName = "Button";
+Button.displayName = 'Button';
 
 /**
  * Group of buttons
@@ -273,8 +273,8 @@ export const ButtonGroup = ({ children }: { children: React.ReactNode }) => {
         const childWithProps = React.cloneElement(child as React.ReactElement, {
           className: cn(
             (child as React.ReactElement).props.className,
-            !isFirst && "rounded-l-none border-l-0",
-            !isLast && "rounded-r-none border-r-0",
+            !isFirst && 'rounded-l-none border-l-0',
+            !isLast && 'rounded-r-none border-r-0'
           ),
           key: `${stableId}-${index}`,
         });
