@@ -1,7 +1,8 @@
 import { Dialoguer } from "./ui/dialog/Dialog";
 
-import { Button, ButtonGroup } from "./ui/button/button";
+import { Button, ButtonGroup, ButtonProps } from "./ui/button/button";
 import { Add, ChevronDown } from "./ui/icons";
+import { useState } from "react";
 
 const ButtonShowcase = () => {
   return (
@@ -405,11 +406,67 @@ const ButtonShowcase = () => {
   );
 };
 
+const ButtonWithLatency = ({
+  latency,
+  ...props
+}: { latency: number } & Omit<ButtonProps, "loading">) => {
+  const [loading, setLoading] = useState(false);
+
+  return (
+    <Button
+      onClick={() => {
+        setLoading(true);
+        setTimeout(() => setLoading(false), latency);
+      }}
+      loading={loading}
+      {...props}
+    >
+      ~{latency}ms latency
+    </Button>
+  );
+};
+
+const LatencyShowcase = () => {
+  const latencies = [1, 50, 350, 1000];
+  const loadingStrategies = ["minimumDuration", "delay", "immediate"] as const;
+
+  return (
+    <>
+      {loadingStrategies.map((loadingStrategy) => (
+        <div>
+          <h2 className="font-sm text-gray-11">{loadingStrategy}</h2>
+          <div className="flex gap-4">
+            {latencies.map((latency) => (
+              <ButtonWithLatency
+                key={latency}
+                latency={latency}
+                loadingStrategy={loadingStrategy}
+                variant="primary"
+              />
+            ))}
+          </div>
+        </div>
+      ))}
+    </>
+  );
+};
+
 function App() {
   return (
-    <div className="min-h-screen grid place-items-center">
+    <div className="min-h-screen grid place-items-center gap-8">
+      <section className="flex flex-col gap-4">
+        <h2>
+          Loading Strategy:
+          <pre className="text-gray-11 text-sm">{`minimum artificial delays
+- minimumDuration: shows spinner for at least 500ms
+- delay: don't show spinner if response is less than 100ms
+- immediate: normal behavior`}</pre>
+        </h2>
+        <LatencyShowcase />
+      </section>
+      <hr className="border-gray-06 w-full" />
       <div className="flex flex-col gap-8 items-center justify-center">
-        <ButtonShowcase />
+        <ButtonShowcase />B
       </div>
       <Dialoguer />
     </div>
