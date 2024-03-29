@@ -4,6 +4,7 @@ import { Slot } from '@radix-ui/react-slot';
 import * as Toggle from '@radix-ui/react-toggle';
 import { type ToggleProps, PrimitiveButtonProps } from '@radix-ui/react-toggle';
 import { cva, type VariantProps } from 'class-variance-authority';
+import { Link, type LinkProps } from 'react-router-dom';
 
 import { cn } from '../util';
 import { Spinner } from '../icons';
@@ -150,7 +151,7 @@ interface BaseButtonProps {
    * - immediate: normal behavior
    * @default "delay"
    */
-  loadingStrategy?: 'minimumDuration' | 'delay' | 'immediate';
+  loadingStrategy?: loadingStrategy;
 }
 
 export interface ButtonProps
@@ -192,48 +193,11 @@ export const Button = React.forwardRef<
     },
     ref
   ) => {
-    // loading strategy is based on https://x.com/JohnPhamous/status/1679271160570327040?s=20
-    const [loading, setLoading] = React.useState(_loading);
-    const artificialDelayPromiseRef = React.useRef<Promise<void>>();
+    const loading = useArtificialDelay(_loading, loadingStrategy);
 
-    const minimumDurationCallback = React.useCallback(() => {
-      setLoading(true);
-      artificialDelayPromiseRef.current = new Promise((resolve) =>
-        setTimeout(resolve, 500)
-      );
-    }, []);
-
-    const delayCallback = React.useCallback(() => {
-      artificialDelayPromiseRef.current = new Promise((resolve) =>
-        setTimeout(() => {
-          setLoading(true);
-          resolve();
-        }, 100)
-      );
-    }, []);
-
-    React.useEffect(() => {
-      if (loadingStrategy === 'immediate') {
-        setLoading(_loading);
-        return;
-      }
-
-      if (_loading) {
-        if (loadingStrategy === 'minimumDuration') {
-          minimumDurationCallback();
-        } else if (loadingStrategy === 'delay') {
-          delayCallback();
-        }
-      } else {
-        void artificialDelayPromiseRef.current?.then(() => {
-          setLoading(false);
-        });
-      }
-    }, [_loading, loadingStrategy, minimumDurationCallback, delayCallback]);
-
+    const Left = loading ? <Spinner className="animate-spin" /> : left;
     const CompIfNotAsChild = toggle ? Toggle.Root : 'button';
     const Comp = asChild ? Slot : CompIfNotAsChild;
-    const Left = loading ? <Spinner className="animate-spin" /> : left;
 
     return (
       <Comp
@@ -256,6 +220,55 @@ export const Button = React.forwardRef<
   }
 );
 Button.displayName = 'Button';
+
+export interface ButtonLinkProps
+  extends LinkProps,
+    BaseButtonProps,
+    VariantProps<typeof buttonVariants> {}
+
+export const ButtonLink = React.forwardRef<
+  HTMLAnchorElement,
+  ButtonLinkProps & { children: React.ReactNode }
+>(
+  (
+    {
+      className,
+      variant,
+      size,
+      loading: _loading,
+      loadingStrategy = 'delay',
+      shortcut,
+      left,
+      right,
+      children,
+      ...props
+    },
+    ref
+  ) => {
+    const loading = useArtificialDelay(_loading, loadingStrategy);
+    const Left = loading ? <Spinner className="animate-spin" /> : left;
+
+    return (
+      <Link
+        className={cn(buttonVariants({ variant, size, className }))}
+        ref={ref}
+        {...props}
+      >
+        {Left}
+        {children || shortcut ? (
+          <span className="inline-flex gap-1">
+            {children}
+            {shortcut && (
+              <Shortcut modifier={shortcut.modifier}>{shortcut.key}</Shortcut>
+            )}
+          </span>
+        ) : null}
+        {right}
+      </Link>
+    );
+  }
+);
+ButtonLink.displayName = 'ButtonLink';
 
 /**
  * Group of buttons
@@ -288,4 +301,58 @@ export const ButtonGroup = ({ children }: { children: React.ReactNode }) => {
       })}
     </div>
   );
+};
+
+type loadingStrategy = 'minimumDuration' | 'delay' | 'immediate';
+const useArtificialDelay = (
+  loading: boolean | undefined,
+  /**
+   * minimum artificial delays
+   * - minimumDuration: shows spinner for at least 500ms
+   * - delay: don't show spinner if response is less than 100ms
+   * - immediate: normal behavior
+   * @default "delay"
+   */
+  loadingStrategy: loadingStrategy = 'delay'
+) => {
+  // loading strategy is based on https://x.com/JohnPhamous/status/1679271160570327040?s=20
+  const [isLoading, setLoading] = React.useState(loading);
+  const artificialDelayPromiseRef = React.useRef<Promise<void>>();
+
+  const minimumDurationCallback = React.useCallback(() => {
+    setLoading(true);
+    artificialDelayPromiseRef.current = new Promise((resolve) =>
+      setTimeout(resolve, 500)
+    );
+  }, []);
+
+  const delayCallback = React.useCallback(() => {
+    artificialDelayPromiseRef.current = new Promise((resolve) =>
+      setTimeout(() => {
+        setLoading(true);
+        resolve();
+      }, 100)
+    );
+  }, []);
+
+  React.useEffect(() => {
+    if (loadingStrategy === 'immediate') {
+      setLoading(loading);
+      return;
+    }
+
+    if (loading) {
+      if (loadingStrategy === 'minimumDuration') {
+        minimumDurationCallback();
+      } else if (loadingStrategy === 'delay') {
+        delayCallback();
+      }
+    } else {
+      void artificialDelayPromiseRef.current?.then(() => {
+        setLoading(false);
+      });
+    }
+  }, [loading, loadingStrategy, minimumDurationCallback, delayCallback]);
+
+  return isLoading;
 };
