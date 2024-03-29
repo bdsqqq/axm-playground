@@ -5,6 +5,8 @@ import * as Toggle from '@radix-ui/react-toggle';
 import { type ToggleProps, PrimitiveButtonProps } from '@radix-ui/react-toggle';
 import { cva, type VariantProps } from 'class-variance-authority';
 
+import { Link, LinkProps } from 'react-router-dom';
+
 import { cn } from '../util';
 import { Spinner } from '../icons';
 
@@ -14,6 +16,25 @@ type TogglePropsWithoutPrimitiveButtonProps = Omit<
 >;
 type TogglePropsWithValuesAsNever = {
   [K in keyof TogglePropsWithoutPrimitiveButtonProps]: never;
+};
+
+type LinkPropsWithoutPolymorphicComponentOrLegacyInnerRef = Omit<
+  LinkProps,
+  'component' | 'innerRef'
+>;
+type LinkPropsWithoutPrimitiveAnchorProps = Omit<
+  LinkPropsWithoutPolymorphicComponentOrLegacyInnerRef,
+  keyof React.ComponentPropsWithoutRef<'a'>
+>;
+type LinkPropsWithValuesAsNever = {
+  [K in keyof LinkPropsWithoutPrimitiveAnchorProps]: never;
+};
+
+type HTMLButtonProps = React.ComponentPropsWithoutRef<'button'>;
+type HTMLAnchorProps = React.ComponentPropsWithoutRef<'a'>;
+
+type HTMLButtonPropsThatDontExistInHTMLAnchorPropsAsNever = {
+  [K in Exclude<keyof HTMLButtonProps, keyof HTMLAnchorProps>]?: never;
 };
 
 /** Map of modifier keys to their KeyboardEvent properties
@@ -157,8 +178,11 @@ export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     BaseButtonProps,
     TogglePropsWithValuesAsNever,
+    LinkPropsWithValuesAsNever,
     VariantProps<typeof buttonVariants> {
   asChild?: boolean;
+  ref?: React.Ref<HTMLButtonElement>;
+
   toggle?: false;
 }
 
@@ -166,95 +190,111 @@ export interface ToggleButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     BaseButtonProps,
     ToggleProps,
+    LinkPropsWithValuesAsNever,
     VariantProps<typeof buttonVariants> {
   asChild?: false;
+  ref?: React.Ref<HTMLButtonElement>;
+
   toggle: true;
 }
 
-export const Button = React.forwardRef<
-  HTMLButtonElement,
-  ButtonProps | ToggleButtonProps
->(
-  (
-    {
-      className,
-      variant,
-      size,
-      asChild = false,
-      loading: _loading,
-      left,
-      right,
-      shortcut,
-      children,
-      loadingStrategy = 'delay',
-      toggle,
-      ...props
-    },
-    ref
-  ) => {
-    // loading strategy is based on https://x.com/JohnPhamous/status/1679271160570327040?s=20
-    const [loading, setLoading] = React.useState(_loading);
-    const artificialDelayPromiseRef = React.useRef<Promise<void>>();
+export interface LinkButtonProps
+  extends React.AnchorHTMLAttributes<HTMLAnchorElement>,
+    BaseButtonProps,
+    HTMLButtonPropsThatDontExistInHTMLAnchorPropsAsNever,
+    TogglePropsWithValuesAsNever,
+    LinkPropsWithoutPrimitiveAnchorProps,
+    VariantProps<typeof buttonVariants> {
+  ref?: React.Ref<React.ComponentRef<Link>>;
+  asChild?: boolean;
 
-    const minimumDurationCallback = React.useCallback(() => {
-      setLoading(true);
-      artificialDelayPromiseRef.current = new Promise((resolve) =>
-        setTimeout(resolve, 500)
-      );
-    }, []);
+  toggle?: false;
+}
 
-    const delayCallback = React.useCallback(() => {
-      artificialDelayPromiseRef.current = new Promise((resolve) =>
-        setTimeout(() => {
-          setLoading(true);
-          resolve();
-        }, 100)
-      );
-    }, []);
+export const Button = ({
+  className,
+  variant,
+  size,
+  asChild = false,
+  loading: _loading,
+  left,
+  right,
+  shortcut,
+  children,
+  loadingStrategy = 'delay',
+  toggle,
+  ref,
+  ...props
+}: ButtonProps | ToggleButtonProps | LinkButtonProps) => {
+  // loading strategy is based on https://x.com/JohnPhamous/status/1679271160570327040?s=20
+  const [loading, setLoading] = React.useState(_loading);
+  const artificialDelayPromiseRef = React.useRef<Promise<void>>();
 
-    React.useEffect(() => {
-      if (loadingStrategy === 'immediate') {
-        setLoading(_loading);
-        return;
-      }
-
-      if (_loading) {
-        if (loadingStrategy === 'minimumDuration') {
-          minimumDurationCallback();
-        } else if (loadingStrategy === 'delay') {
-          delayCallback();
-        }
-      } else {
-        void artificialDelayPromiseRef.current?.then(() => {
-          setLoading(false);
-        });
-      }
-    }, [_loading, loadingStrategy, minimumDurationCallback, delayCallback]);
-
-    const CompIfNotAsChild = toggle ? Toggle.Root : 'button';
-    const Comp = asChild ? Slot : CompIfNotAsChild;
-    const Left = loading ? <Spinner className="animate-spin" /> : left;
-
-    return (
-      <Comp
-        className={cn(buttonVariants({ variant, size, className }))}
-        ref={ref}
-        {...props}
-      >
-        {Left}
-        {children || shortcut ? (
-          <span className="inline-flex gap-1">
-            {children}
-            {shortcut && (
-              <Shortcut modifier={shortcut.modifier}>{shortcut.key}</Shortcut>
-            )}
-          </span>
-        ) : null}
-        {right}
-      </Comp>
+  const minimumDurationCallback = React.useCallback(() => {
+    setLoading(true);
+    artificialDelayPromiseRef.current = new Promise((resolve) =>
+      setTimeout(resolve, 500)
     );
-  }
-);
+  }, []);
+
+  const delayCallback = React.useCallback(() => {
+    artificialDelayPromiseRef.current = new Promise((resolve) =>
+      setTimeout(() => {
+        setLoading(true);
+        resolve();
+      }, 100)
+    );
+  }, []);
+
+  React.useEffect(() => {
+    if (loadingStrategy === 'immediate') {
+      setLoading(_loading);
+      return;
+    }
+
+    if (_loading) {
+      if (loadingStrategy === 'minimumDuration') {
+        minimumDurationCallback();
+      } else if (loadingStrategy === 'delay') {
+        delayCallback();
+      }
+    } else {
+      void artificialDelayPromiseRef.current?.then(() => {
+        setLoading(false);
+      });
+    }
+  }, [_loading, loadingStrategy, minimumDurationCallback, delayCallback]);
+
+  const isThisALink = 'to' in props;
+
+  const CompIfNotAsChild = isThisALink
+    ? Link
+    : toggle
+      ? Toggle.Root
+      : HTMLButton;
+  const Comp = asChild ? Slot : CompIfNotAsChild;
+  const Left = loading ? <Spinner className="animate-spin" /> : left;
+
+  return (
+    <Comp
+      className={cn(buttonVariants({ variant, size, className }))}
+      // @ts-expect-error - pretend it fucking is
+      ref={ref}
+      {...props}
+    >
+      {Left}
+      {children || shortcut ? (
+        <span className="inline-flex gap-1">
+          {children}
+          {shortcut && (
+            <Shortcut modifier={shortcut.modifier}>{shortcut.key}</Shortcut>
+          )}
+        </span>
+      ) : null}
+      {right}
+    </Comp>
+  );
+};
 Button.displayName = 'Button';
 
 /**
@@ -289,3 +329,8 @@ export const ButtonGroup = ({ children }: { children: React.ReactNode }) => {
     </div>
   );
 };
+
+const HTMLButton = React.forwardRef<
+  HTMLButtonElement,
+  React.ComponentPropsWithoutRef<'button'>
+>((props, ref) => <button {...props} ref={ref} />);
