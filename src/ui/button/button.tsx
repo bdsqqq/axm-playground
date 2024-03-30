@@ -154,6 +154,37 @@ interface BaseButtonProps {
   loadingStrategy?: loadingStrategy;
 }
 
+/**
+ * Content rendered by buttons, handles swapping item with loading when appropriate
+ * Used to share content between Button and ButtonLink
+ */
+const ButtonContent = ({
+  left,
+  loading,
+  children,
+  shortcut,
+  right,
+}: Pick<BaseButtonProps, 'left' | 'loading' | 'shortcut' | 'right'> & {
+  children: React.ReactNode;
+}) => {
+  const Left = loading ? <Spinner className="animate-spin" /> : left;
+
+  return (
+    <>
+      {Left}
+      {children || shortcut ? (
+        <span className="inline-flex gap-1">
+          {children}
+          {shortcut && (
+            <Shortcut modifier={shortcut.modifier}>{shortcut.key}</Shortcut>
+          )}
+        </span>
+      ) : null}
+      {right}
+    </>
+  );
+};
+
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     BaseButtonProps,
@@ -195,7 +226,6 @@ export const Button = React.forwardRef<
   ) => {
     const loading = useArtificialDelay(_loading, loadingStrategy);
 
-    const Left = loading ? <Spinner className="animate-spin" /> : left;
     const CompIfNotAsChild = toggle ? Toggle.Root : 'button';
     const Comp = asChild ? Slot : CompIfNotAsChild;
 
@@ -205,16 +235,14 @@ export const Button = React.forwardRef<
         ref={ref}
         {...props}
       >
-        {Left}
-        {children || shortcut ? (
-          <span className="inline-flex gap-1">
-            {children}
-            {shortcut && (
-              <Shortcut modifier={shortcut.modifier}>{shortcut.key}</Shortcut>
-            )}
-          </span>
-        ) : null}
-        {right}
+        <ButtonContent
+          left={left}
+          loading={loading}
+          shortcut={shortcut}
+          right={right}
+        >
+          {children}
+        </ButtonContent>
       </Comp>
     );
   }
@@ -246,7 +274,6 @@ export const ButtonLink = React.forwardRef<
     ref
   ) => {
     const loading = useArtificialDelay(_loading, loadingStrategy);
-    const Left = loading ? <Spinner className="animate-spin" /> : left;
 
     return (
       <Link
@@ -254,16 +281,14 @@ export const ButtonLink = React.forwardRef<
         ref={ref}
         {...props}
       >
-        {Left}
-        {children || shortcut ? (
-          <span className="inline-flex gap-1">
-            {children}
-            {shortcut && (
-              <Shortcut modifier={shortcut.modifier}>{shortcut.key}</Shortcut>
-            )}
-          </span>
-        ) : null}
-        {right}
+        <ButtonContent
+          left={left}
+          loading={loading}
+          shortcut={shortcut}
+          right={right}
+        >
+          {children}
+        </ButtonContent>
       </Link>
     );
   }
