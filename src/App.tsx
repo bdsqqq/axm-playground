@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { Button } from './ui/button/button';
 import { ButtonShowcase, LatencyShowcase } from './ui/button/showcase';
 import { Dialoguer } from './ui/dialog/Dialog';
@@ -136,6 +136,21 @@ function useKeyPress({
 }
 
 const KeyboardShortCutShowcase = () => {
+  return (
+    <div className="flex flex-wrap gap-2">
+      <KeyboardShortcutPanelButton />
+      <MockShortcutButton targetKey="A" modifierKeys={['Shift']} />
+      <MockShortcutButton targetKey="B" modifierKeys={['Meta']} />
+      <MockShortcutButton targetKey="C" modifierKeys={['Alt']} />
+      <MockShortcutButton targetKey="D" modifierKeys={['Shift', 'Meta']} />
+      <MockShortcutButton targetKey="E" modifierKeys={['Control']} />
+      <MockShortcutButton targetKey="F" modifierKeys={['OS']} />
+      <MockShortcutButton targetKey="G" modifierKeys={['Meta', 'Control']} />
+    </div>
+  );
+};
+
+const KeyboardShortcutPanelButton = () => {
   const { shortcuts } = useStore(shortcutStore);
 
   const handleOpenKeyboardShortcutPanel = () => {
@@ -163,18 +178,67 @@ const KeyboardShortCutShowcase = () => {
     });
   };
 
-  const stableTargetKeys = useMemo(() => ['?'], []);
-  const stableModifierKeys = useMemo<ModifierKey[]>(() => ['Shift'], []);
+  const _targetKeys = ['?'];
+  const _modifierKeys: ModifierKey[] = ['Shift'];
+
+  const targetKeys = useMemo(() => _targetKeys, []);
+  const modifierKeys = useMemo(() => _modifierKeys, []);
 
   useKeyPress({
     name: 'Open Keyboard Shortcut Panel',
-    targetKeys: stableTargetKeys,
-    modifierKeys: stableModifierKeys,
+    targetKeys: targetKeys,
+    modifierKeys: modifierKeys,
     onKeyDown: handleOpenKeyboardShortcutPanel,
   });
 
   return (
-    <Button onClick={handleOpenKeyboardShortcutPanel}>Keyboard Shortcut</Button>
+    <Button
+      onClick={handleOpenKeyboardShortcutPanel}
+      shortcut={{
+        key: targetKeys.join(','),
+        modifier: modifierKeys,
+      }}
+    >
+      Keyboard Shortcut
+    </Button>
+  );
+};
+
+const MockShortcutButton = ({
+  targetKey: _targetKeys,
+  modifierKeys: _modifierKeys,
+}: {
+  targetKey: string;
+  modifierKeys: ModifierKey[];
+}) => {
+  const targetKeys = useMemo(() => [_targetKeys], []);
+  const modifierKeys = useMemo(() => _modifierKeys, []);
+
+  const actionName = useMemo(() => {
+    return `mock action ${targetKeys.join(', ')}, ${modifierKeys.join(', ')}`;
+  }, [targetKeys, modifierKeys]);
+
+  const mockAction = useCallback(() => {
+    console.log(actionName);
+  }, [actionName]);
+
+  useKeyPress({
+    name: actionName,
+    targetKeys: targetKeys,
+    modifierKeys: modifierKeys,
+    onKeyDown: mockAction,
+  });
+
+  return (
+    <Button
+      onClick={mockAction}
+      shortcut={{
+        key: targetKeys.join(','),
+        modifier: modifierKeys,
+      }}
+    >
+      Keyboard Shortcut
+    </Button>
   );
 };
 
