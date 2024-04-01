@@ -13,8 +13,10 @@
     /* Strictness */
     "strict": true,
     "noUncheckedIndexedAccess": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
 
-    // /* If transpiling with TypeScript: */
+    /* If transpiling with TypeScript: */
     // "moduleResolution": "NodeNext",
     // "module": "NodeNext",
     // "outDir": "dist",
