@@ -87,7 +87,7 @@ export const PanelProvider = () => {
           }}
           className="fixed bottom-2 right-2 top-2 max-h-[calc(100vh_-_1rem)] w-96 rounded border border-gray-06 bg-gray-01 focus:outline-none"
         >
-          <Dialog.Title className="px-4 text-lg">{title}</Dialog.Title>
+          <Dialog.Title className="p-4 text-lg">{title}</Dialog.Title>
           <Dialog.Description className="px-4">
             {description}
           </Dialog.Description>

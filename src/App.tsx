@@ -156,24 +156,26 @@ const KeyboardShortcutPanelButton = () => {
   const handleOpenKeyboardShortcutPanel = () => {
     panel({
       title: 'Keyboard Shortcut',
-      description: 'Keyboard Shortcut',
       content: (
-        <ul>
-          {shortcuts.map((shortcut) => (
-            <li
-              key={shortcut.name}
-              className="flex items-center justify-between"
-            >
-              <span>{shortcut.name}</span>
-              <span>
-                <Shortcut
-                  children={shortcut.targetKeys.join(', ')}
-                  modifier={shortcut.modifierKeys}
-                />
-              </span>
-            </li>
-          ))}
-        </ul>
+        <div className="flex flex-col gap-2">
+          <h2>General:</h2>
+          <ul className="flex flex-col gap-1">
+            {shortcuts.map((shortcut) => (
+              <li
+                key={shortcut.name}
+                className="flex items-center justify-between"
+              >
+                <span className="text-gray-11">{shortcut.name}</span>
+                <span>
+                  <Shortcut
+                    children={shortcut.targetKeys.join(', ')}
+                    modifier={shortcut.modifierKeys}
+                  />
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
       ),
     });
   };
