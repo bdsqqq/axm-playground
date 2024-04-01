@@ -77,11 +77,11 @@ function useKeyPress({
   const { addShortcut, removeShortcut } = useStore(shortcutStore);
 
   useEffect(() => {
-    console.log('add shortcut effect');
+    console.log('add shortcut', name, targetKeys, modifierKeys);
     addShortcut({ name, targetKeys, modifierKeys });
 
     return () => {
-      console.log('remove shortcut effect');
+      console.log('remove shortcut', name, targetKeys, modifierKeys);
       removeShortcut({ name, targetKeys, modifierKeys });
     };
   }, [name, targetKeys, modifierKeys, addShortcut, removeShortcut]);
