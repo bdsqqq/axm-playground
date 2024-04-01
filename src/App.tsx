@@ -137,15 +137,32 @@ function useKeyPress({
 
 const KeyboardShortCutShowcase = () => {
   return (
-    <div className="flex flex-wrap gap-2">
-      <KeyboardShortcutPanelButton />
-      <MockShortcutButton targetKey="A" modifierKeys={['Shift']} />
-      <MockShortcutButton targetKey="B" modifierKeys={['Meta']} />
-      <MockShortcutButton targetKey="C" modifierKeys={['Alt']} />
-      <MockShortcutButton targetKey="D" modifierKeys={['Shift', 'Meta']} />
-      <MockShortcutButton targetKey="E" modifierKeys={['Control']} />
-      <MockShortcutButton targetKey="F" modifierKeys={['OS']} />
-      <MockShortcutButton targetKey="G" modifierKeys={['Meta', 'Control']} />
+    <div className="flex max-w-prose flex-col gap-2">
+      <div className="flex flex-col gap-1 font-mono text-sm text-gray-11">
+        <p>
+          - Keyboard shortcuts are tied to an action, you're able to register
+          them with a hook and they will automatically appear in the Keyboard
+          Shortcut Panel;
+        </p>
+        <p>
+          - You can use the "Shortcut" component to display a shortcut given the
+          id of an action.
+        </p>
+        <p>
+          - Optionally, you can pass the "shortcut" prop to a button and it will
+          handle registering the shortcut itself.
+        </p>
+      </div>
+      <div className="flex flex-wrap gap-2">
+        <KeyboardShortcutPanelButton />
+        <MockShortcutButton targetKey="A" modifierKeys={['Shift']} />
+        <MockShortcutButton targetKey="B" modifierKeys={['Meta']} />
+        <MockShortcutButton targetKey="C" modifierKeys={['Alt']} />
+        <MockShortcutButton targetKey="D" modifierKeys={['Shift', 'Meta']} />
+        <MockShortcutButton targetKey="E" modifierKeys={['Control']} />
+        <MockShortcutButton targetKey="F" modifierKeys={['OS']} />
+        <MockShortcutButton targetKey="G" modifierKeys={['Meta', 'Control']} />
+      </div>
     </div>
   );
 };
