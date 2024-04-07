@@ -1,9 +1,203 @@
+import React from 'react';
 import { ButtonShowcase, LatencyShowcase } from './ui/button/showcase';
 import { Dialoguer } from './ui/dialog/Dialog';
+import { Button, ButtonGroup } from './ui/button/button';
+import { createPortal } from 'react-dom';
+import { cn } from './ui/util';
+
+function PretendNavBar() {
+  const gap = 'gap-4';
+
+  return (
+    <nav
+      className={cn(
+        'flex w-full justify-between rounded border border-gray-06 bg-gray-02 p-2',
+        gap
+      )}
+    >
+      <div className={cn('flex', gap)}>
+        <Button variant={'tertiary'}>Datasets</Button>
+        <Button variant={'tertiary'}>Query</Button>
+      </div>
+      <div className={cn('flex', gap)}>
+        <div
+          id="out-nav"
+          className={cn(
+            'min-w-8 border border-dashed border-[--orange]',
+            'flex',
+            gap
+          )}
+        ></div>
+      </div>
+    </nav>
+  );
+}
+
+function PretendMain() {
+  const [tab, setTab] = React.useState(0);
+
+  const tabsAmmount = 3;
+
+  return (
+    <>
+      {document.getElementById('out-nav')
+        ? createPortal(
+            <Button variant={'secondary'}>Hej</Button>,
+            document.getElementById('out-nav')
+          )
+        : null}
+      <div className="flex flex-col bg-gray-02">
+        <ButtonGroup>
+          {Array.from({ length: tabsAmmount }).map((_, i) => (
+            <Button
+              key={i}
+              variant={'tertiary'}
+              onClick={() => {
+                setTab(i);
+              }}
+            >
+              Tab {i + 1}
+            </Button>
+          ))}
+        </ButtonGroup>
+
+        {tab === 0 ? <PretendTab id="1" /> : null}
+        {tab === 1 ? <PretendTab id="2" /> : null}
+        {tab === 2 ? <PretendTab id="3" /> : null}
+      </div>
+    </>
+  );
+}
+
+function PretendTab({ id }: { id: string }) {
+  const [subTab, setSubTab] = React.useState(0);
+
+  const subTabsAmmount = 3;
+
+  return (
+    <>
+      {document.getElementById('out-nav')
+        ? createPortal(
+            <Button variant={'secondary'}>{`action from tab ${id}`}</Button>,
+            document.getElementById('out-nav')
+          )
+        : null}
+      <div className="bg-gray-03">
+        <ButtonGroup>
+          {Array.from({ length: subTabsAmmount }).map((_, i) => (
+            <Button
+              key={i}
+              variant={'tertiary'}
+              onClick={() => {
+                setSubTab(i);
+              }}
+            >
+              SubTab {i + 1}
+            </Button>
+          ))}
+        </ButtonGroup>
+        <div className="flex flex-col p-2">
+          <span>tab: {id}</span>
+
+          {subTab === 0 ? <PretendSubTab id="1" /> : null}
+          {subTab === 1 ? <PretendSubTab id="2" /> : null}
+          {subTab === 2 ? <PretendSubTab id="3" /> : null}
+        </div>
+      </div>
+    </>
+  );
+}
+
+function PretendSubTab({ id }: { id: string }) {
+  return (
+    <>
+      {document.getElementById('out-nav')
+        ? createPortal(
+            <Button variant={'secondary'}>{`action from subtab ${id}`}</Button>,
+            document.getElementById('out-nav')
+          )
+        : null}
+      <div className="">
+        <span>subtab: {id}</span>
+      </div>
+    </>
+  );
+}
+
+function PortalShowcase_Multiplexer_content() {
+  const [count, setCount] = React.useState(0);
+  const increment = React.useCallback(() => setCount((c) => c + 1), []);
+
+  const [element, setElement] = React.useState<HTMLElement | null>();
+
+  return (
+    <>
+      <div className="flex gap-2">
+        <Button onClick={increment}>+1</Button>
+        {
+          <Button
+            variant={'secondary'}
+            onClick={() => setElement(document.getElementById('out-1'))}
+          >
+            Move to #1
+          </Button>
+        }
+        {
+          <Button
+            variant={'secondary'}
+            onClick={() => setElement(document.getElementById('out-2'))}
+          >
+            Move to #2
+          </Button>
+        }
+      </div>
+      <div className="border border-dashed border-[--blue] p-2">
+        <span className="leading-none">in-a: {count}</span>
+        {element ? createPortal(<div>out-a: {count}</div>, element) : null}
+      </div>
+    </>
+  );
+}
+
+function PortalShowcase_MultiPlexer_out() {
+  return (
+    <div className="grid w-full grid-cols-2 gap-2">
+      <div
+        className="grid h-24 place-items-center border border-dashed border-[--orange] p-2"
+        id="out-1"
+      />
+      <div
+        className="grid h-24 place-items-center border border-dashed border-[--orange] p-2"
+        id="out-2"
+      />
+    </div>
+  );
+}
+
+function PortalShowcase_Multiplexer() {
+  return (
+    <div
+      className="flex w-full flex-col items-center justify-center gap-4"
+      style={
+        { '--orange': '#ff9a00', '--blue': '#27a7d8' } as React.CSSProperties
+      }
+    >
+      <pre className="text-sm text-gray-11"></pre>
+
+      <PretendNavBar />
+      <PretendMain />
+
+      <PortalShowcase_Multiplexer_content />
+      <PortalShowcase_MultiPlexer_out />
+    </div>
+  );
+}
 
 function App() {
   return (
     <div className="grid min-h-screen place-items-center gap-8 p-12">
+      <PortalShowcase_Multiplexer />
+      <hr className="w-full border-gray-06" />
       <LatencyShowcase />
       <hr className="w-full border-gray-06" />
       <ButtonShowcase />
