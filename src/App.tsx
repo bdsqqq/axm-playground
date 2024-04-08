@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { ButtonShowcase, LatencyShowcase } from './ui/button/showcase';
 import { Dialoguer } from './ui/dialog/Dialog';
 import { Button, ButtonGroup } from './ui/button/button';
 import { createPortal } from 'react-dom';
-import { cn } from './ui/util';
+import { cn, newId } from './ui/util';
+import { createStore } from 'zustand/vanilla';
+import { useStore } from 'zustand';
 
 function FarAwaySlots_PretendNavBar() {
   const gap = 'gap-4';
@@ -48,7 +50,7 @@ function FarAwaySlots_PretendMain() {
 
   return (
     <>
-      <InPortal outPortalName="out-nav">
+      <InPortal name={`action-from-main`} outPortalName="out-nav">
         <Button size="sm" variant={'secondary'}>
           action from main
         </Button>
@@ -84,7 +86,7 @@ function FarAwaySlots_PretendTab({ id }: { id: string }) {
 
   return (
     <>
-      <InPortal outPortalName="out-nav">
+      <InPortal name={`tab-${id}`} outPortalName="out-nav">
         <Button
           size="sm"
           variant={'secondary'}
@@ -119,22 +121,53 @@ function FarAwaySlots_PretendTab({ id }: { id: string }) {
 
 function InPortal({
   children,
+  name,
   outPortalName,
 }: {
   children: React.ReactNode;
+  name: string;
   outPortalName: string;
 }) {
+  useRegisterPortal({
+    name,
+    type: 'in',
+    intendedOut: outPortalName,
+  });
+
   const [outPortalNode, setOutPortalNode] = React.useState<HTMLElement | null>(
     null
   );
 
-  React.useLayoutEffect(() => {
+  const attempts = React.useRef(0);
+  const totalAtempts = 5;
+
+  const tryToFindOutPortal = React.useCallback(() => {
     const element = document.getElementById(outPortalName);
     if (element) {
       setOutPortalNode(element);
       return;
     }
+    if (attempts.current >= totalAtempts) return;
+
+    attempts.current += 1;
+    const timeout = setTimeout(() => {
+      tryToFindOutPortal();
+    }, 100 * attempts.current);
+    console.log(
+      `could not find outPortal with name ${outPortalName}, attempt: ${attempts.current}`
+    );
+    if (attempts.current === totalAtempts)
+      console.error(`outPortal ${outPortalName} not found`);
+
+    return () => {
+      attempts.current = 0;
+      clearTimeout(timeout);
+    };
   }, [outPortalName]);
+
+  React.useLayoutEffect(() => {
+    tryToFindOutPortal();
+  }, [tryToFindOutPortal]);
 
   return <>{outPortalNode ? createPortal(children, outPortalNode) : null}</>;
 }
@@ -143,6 +176,7 @@ interface OutPortalProps extends React.HTMLAttributes<HTMLDivElement> {
   name: string;
 }
 function OutPortal({ name, className, ...rest }: OutPortalProps) {
+  useRegisterPortal({ name, type: 'out' });
   const debugStyles = 'border border-dashed border-[--orange]';
 
   return <div className={cn(debugStyles, className)} id={name} {...rest} />;
@@ -151,7 +185,7 @@ function OutPortal({ name, className, ...rest }: OutPortalProps) {
 function FarAwaySlots_PretendSubTab({ id }: { id: string }) {
   return (
     <>
-      <InPortal outPortalName="out-nav">
+      <InPortal name={`subtab-${id}`} outPortalName="out-nav">
         <Button
           size="sm"
           variant={'secondary'}
@@ -183,7 +217,8 @@ function PortalShowcase_Multiplexer_content() {
   const [count, setCount] = React.useState(0);
   const increment = React.useCallback(() => setCount((c) => c + 1), []);
 
-  const [portalDestination, setPortalDestination] = React.useState('');
+  const [portalDestination, setPortalDestination] =
+    React.useState('intentionallyEmpty');
 
   return (
     <>
@@ -208,7 +243,10 @@ function PortalShowcase_Multiplexer_content() {
       </div>
       <div className="border border-dashed border-[--blue] p-2">
         <span className="leading-none">in-a: {count}</span>
-        <InPortal outPortalName={portalDestination}>
+        <InPortal
+          name={`multiplexer-content`}
+          outPortalName={portalDestination}
+        >
           <div>out-a: {count}</div>
         </InPortal>
       </div>
@@ -219,14 +257,8 @@ function PortalShowcase_Multiplexer_content() {
 function PortalShowcase_MultiPlexer_out() {
   return (
     <div className="grid w-full grid-cols-2 gap-2">
-      <div
-        className="grid h-24 place-items-center border border-dashed border-[--orange] p-2"
-        id="out-1"
-      />
-      <div
-        className="grid h-24 place-items-center border border-dashed border-[--orange] p-2"
-        id="out-2"
-      />
+      <OutPortal name="out-1" className="grid h-24 place-items-center" />
+      <OutPortal name="out-2" className="grid h-24 place-items-center" />
     </div>
   );
 }
@@ -245,6 +277,113 @@ function PortalShowcase_Multiplexer() {
   );
 }
 
+type Portal = {
+  id: string;
+  name: string;
+  type: 'in' | 'out';
+  intendedOut?: string | undefined;
+};
+interface ApertureState {
+  portals: ReadonlyArray<Portal>;
+
+  addPortal: (portal: Portal) => void;
+  removePortal: (id: string) => void;
+}
+const ApertureStore = createStore<ApertureState>((set) => ({
+  portals: [],
+
+  addPortal: (portal: Portal) =>
+    set((state) => ({
+      portals: [...state.portals, { ...portal }],
+    })),
+
+  removePortal: (id) =>
+    set((state) => ({
+      portals: state.portals.filter((p) => p.id !== id),
+    })),
+}));
+
+const useRegisterPortal = ({
+  name,
+  type,
+  intendedOut,
+}: {
+  name: string;
+  type: 'in' | 'out';
+  intendedOut?: string;
+}) => {
+  const { addPortal, removePortal } = useStore(ApertureStore);
+  const id = React.useMemo(() => newId('portal'), []);
+  const portal = useMemo(
+    () => ({ id, name, type, intendedOut }),
+    [id, name, type, intendedOut]
+  );
+
+  React.useEffect(() => {
+    addPortal(portal);
+
+    return () => {
+      removePortal(portal.id);
+    };
+  }, [portal, addPortal, removePortal]);
+};
+
+/**
+ * Keeps track of the name and type of rendered portals.
+ */
+function Aperture() {
+  const { portals } = useStore(ApertureStore);
+
+  return (
+    <div className="grid w-full grid-cols-2 gap-4">
+      <div>
+        <h2>Portals</h2>
+        <div className="flex gap-2">
+          <div>
+            <h3>out</h3>
+            <ul>
+              {portals
+                .filter((p) => p.type === 'out')
+                .map((p) => {
+                  const linked = portals.find((i) => i.intendedOut === p.name);
+
+                  return (
+                    <li
+                      className={cn(linked ? 'text-[green]' : 'text-[orange]')}
+                      key={p.id}
+                    >
+                      {p.name}
+                    </li>
+                  );
+                })}
+            </ul>
+          </div>
+
+          <div>
+            <h3>in</h3>
+            <ul>
+              {portals
+                .filter((p) => p.type === 'in')
+                .map((p) => {
+                  const linked = portals.find((o) => o.name === p.intendedOut);
+
+                  return (
+                    <li
+                      className={cn(linked ? 'text-[green]' : 'text-[orange]')}
+                      key={p.id}
+                    >
+                      {p.name}
+                    </li>
+                  );
+                })}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function App() {
   return (
     <div className="grid min-h-screen place-items-center gap-8 p-12">
@@ -256,6 +395,7 @@ function App() {
       <hr className="w-full border-gray-06" />
       <ButtonShowcase />
       <Dialoguer />
+      <Aperture />
     </div>
   );
 }
