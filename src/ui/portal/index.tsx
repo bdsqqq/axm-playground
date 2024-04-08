@@ -12,6 +12,7 @@ type InPortal = {
 type OutPortal = {
   id: string;
   name: string;
+  element: HTMLElement | null;
 };
 interface ApertureState {
   inPortals: ReadonlyArray<InPortal>;
@@ -63,10 +64,16 @@ const useRegisterInPortal = ({
   }, [portal, addInPortal, removeInPortal]);
 };
 
-const useRegisterOutPortal = ({ name }: { name: string }) => {
+const useRegisterOutPortal = ({
+  name,
+  element,
+}: {
+  name: string;
+  element: HTMLElement | null;
+}) => {
   const { addOutPortal, removeOutPortal } = useStore(ApertureStore);
   const id = React.useMemo(() => newId('portal'), []);
-  const portal = useMemo(() => ({ id, name }), [id, name]);
+  const portal = useMemo(() => ({ id, name, element }), [id, name, element]);
 
   React.useEffect(() => {
     addOutPortal(portal);
@@ -143,40 +150,17 @@ export function InPortal({
   outPortalName: string;
 }) {
   useRegisterInPortal({ name, intendedOut: outPortalName });
-
+  const { outPortals } = useStore(ApertureStore);
   const [outPortalNode, setOutPortalNode] = React.useState<HTMLElement | null>(
     null
   );
 
-  const attempts = React.useRef(0);
-  const totalAtempts = 5;
-
   const tryToFindOutPortal = React.useCallback(() => {
-    const element = document.getElementById(outPortalName);
+    const element =
+      outPortals.find((p) => p.name === outPortalName)?.element || null;
+
     setOutPortalNode(element);
-    if (element)
-      return () => {
-        attempts.current = 0;
-        clearTimeout(timeout);
-      };
-
-    if (attempts.current >= totalAtempts) return;
-
-    attempts.current += 1;
-    const timeout = setTimeout(() => {
-      tryToFindOutPortal();
-    }, 100 * attempts.current);
-    console.log(
-      `could not find outPortal with name ${outPortalName}, attempt: ${attempts.current}`
-    );
-    if (attempts.current === totalAtempts)
-      console.error(`outPortal ${outPortalName} not found`);
-
-    return () => {
-      attempts.current = 0;
-      clearTimeout(timeout);
-    };
-  }, [outPortalName]);
+  }, [outPortalName, outPortals]);
 
   React.useLayoutEffect(() => {
     tryToFindOutPortal();
@@ -192,8 +176,17 @@ interface OutPortalProps extends React.HTMLAttributes<HTMLDivElement> {
  * Renders a DOM node that can be targeted by an `InPortal`.
  */
 export function OutPortal({ name, className, ...rest }: OutPortalProps) {
-  useRegisterOutPortal({ name });
+  const ref = React.useRef<HTMLDivElement>(null);
   const debugStyles = 'border border-dashed border-[--orange]';
 
-  return <div className={cn(debugStyles, className)} id={name} {...rest} />;
+  useRegisterOutPortal({ name, element: ref.current });
+
+  return (
+    <div
+      ref={ref}
+      className={cn(debugStyles, className)}
+      id={`id-${name}`}
+      {...rest}
+    />
+  );
 }
