@@ -3,6 +3,23 @@ import { InPortal, OutPortal, useRegisterOutPortal } from '.';
 import { Button, ButtonGroup } from '../button/button';
 import { cn } from '../util';
 
+const PRETEND_NAVBAR_PORTAL_NAME = 'out-nav';
+const InPortalPretendNavbar = ({
+  name,
+  children,
+}: {
+  name: string;
+  children: React.ReactNode;
+}) => {
+  return (
+    <InPortal
+      name={name}
+      outPortalName={PRETEND_NAVBAR_PORTAL_NAME}
+      children={children}
+    />
+  );
+};
+
 function FarAwaySlots_PretendNavBar() {
   const gap = 'gap-4';
 
@@ -28,7 +45,7 @@ function FarAwaySlots_PretendNavBar() {
             'flex',
             gap
           )}
-          name="out-nav"
+          name={PRETEND_NAVBAR_PORTAL_NAME}
         >
           <Button size="sm" variant={'secondary'}>
             action from nav
@@ -46,11 +63,11 @@ function FarAwaySlots_PretendMain() {
 
   return (
     <>
-      <InPortal name={`action-from-main`} outPortalName="out-nav">
+      <InPortalPretendNavbar name={`action-from-main`}>
         <Button size="sm" variant={'secondary'}>
           action from main
         </Button>
-      </InPortal>
+      </InPortalPretendNavbar>
       <div className="flex flex-col bg-gray-02">
         <ButtonGroup>
           {Array.from({ length: tabsAmmount }).map((_, i) => (
@@ -82,12 +99,12 @@ function FarAwaySlots_PretendTab({ id }: { id: string }) {
 
   return (
     <>
-      <InPortal name={`tab-${id}`} outPortalName="out-nav">
+      <InPortalPretendNavbar name={`tab-${id}`}>
         <Button
           size="sm"
           variant={'secondary'}
         >{`action from tab ${id}`}</Button>
-      </InPortal>
+      </InPortalPretendNavbar>
       <div className="bg-gray-03">
         <ButtonGroup>
           {Array.from({ length: subTabsAmmount }).map((_, i) => (
@@ -118,12 +135,12 @@ function FarAwaySlots_PretendTab({ id }: { id: string }) {
 function FarAwaySlots_PretendSubTab({ id }: { id: string }) {
   return (
     <>
-      <InPortal name={`subtab-${id}`} outPortalName="out-nav">
+      <InPortalPretendNavbar name={`subtab-${id}`}>
         <Button
           size="sm"
           variant={'secondary'}
         >{`action from subtab ${id}`}</Button>
-      </InPortal>
+      </InPortalPretendNavbar>
 
       <div className="">
         <span>subtab: {id}</span>
