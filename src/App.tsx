@@ -128,36 +128,13 @@ function InPortal({
     null
   );
 
-  const attempts = React.useRef(0);
-  const totalAtempts = 5;
-
-  const tryToFindOutPortal = React.useCallback(() => {
+  React.useLayoutEffect(() => {
     const element = document.getElementById(outPortalName);
     if (element) {
       setOutPortalNode(element);
       return;
     }
-    if (attempts.current >= totalAtempts) return;
-
-    attempts.current += 1;
-    const timeout = setTimeout(() => {
-      tryToFindOutPortal();
-    }, 100 * attempts.current);
-    console.log(
-      `could not find outPortal with name ${outPortalName}, attempt: ${attempts.current}`
-    );
-    if (attempts.current === totalAtempts)
-      console.error(`outPortal ${outPortalName} not found`);
-
-    return () => {
-      attempts.current = 0;
-      clearTimeout(timeout);
-    };
   }, [outPortalName]);
-
-  React.useLayoutEffect(() => {
-    tryToFindOutPortal();
-  }, [tryToFindOutPortal]);
 
   return <>{outPortalNode ? createPortal(children, outPortalNode) : null}</>;
 }
