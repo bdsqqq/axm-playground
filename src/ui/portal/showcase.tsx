@@ -56,7 +56,7 @@ function FarAwaySlots_PretendMain() {
           {Array.from({ length: tabsAmmount }).map((_, i) => (
             <Button
               size="sm"
-              key={i}
+              key={`tab-${i}`}
               variant={'tertiary'}
               onClick={() => {
                 setTab(i);
@@ -93,7 +93,7 @@ function FarAwaySlots_PretendTab({ id }: { id: string }) {
           {Array.from({ length: subTabsAmmount }).map((_, i) => (
             <Button
               size="sm"
-              key={i}
+              key={`subtab-${i}`}
               variant={'tertiary'}
               onClick={() => {
                 setSubTab(i);
