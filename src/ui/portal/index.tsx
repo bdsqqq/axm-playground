@@ -111,6 +111,10 @@ export function Aperture() {
   );
 }
 
+/**
+ * Children passed to this component will be behave as if they were mounted here (they are),
+ * but will be rendered as children of the DOM node of the `OutPortal` that matches the `outPortalName`.
+ */
 export function InPortal({
   children,
   name,
@@ -167,6 +171,9 @@ export function InPortal({
 interface OutPortalProps extends React.HTMLAttributes<HTMLDivElement> {
   name: string;
 }
+/**
+ * Renders a DOM node that can be targeted by an `InPortal`.
+ */
 export function OutPortal({ name, className, ...rest }: OutPortalProps) {
   useRegisterPortal({ name, type: 'out' });
   const debugStyles = 'border border-dashed border-[--orange]';
