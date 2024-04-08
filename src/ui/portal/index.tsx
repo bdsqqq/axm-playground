@@ -4,62 +4,84 @@ import { cn, newId } from '../util';
 import React, { useMemo } from 'react';
 import { createPortal } from 'react-dom';
 
-type Portal = {
+type InPortal = {
   id: string;
   name: string;
-  type: 'in' | 'out';
-  intendedOut?: string | undefined;
+  intendedOut: string;
+};
+type OutPortal = {
+  id: string;
+  name: string;
 };
 interface ApertureState {
-  portals: ReadonlyArray<Portal>;
+  inPortals: ReadonlyArray<InPortal>;
+  outPortals: ReadonlyArray<OutPortal>;
 
-  addPortal: (portal: Portal) => void;
-  removePortal: (id: string) => void;
+  addInPortal: (portal: InPortal) => void;
+  removeInPortal: (id: string) => void;
+
+  addOutPortal: (portal: OutPortal) => void;
+  removeOutPortal: (id: string) => void;
 }
 const ApertureStore = createStore<ApertureState>((set) => ({
-  portals: [],
+  inPortals: [],
+  outPortals: [],
 
-  addPortal: (portal: Portal) =>
-    set((state) => ({
-      portals: [...state.portals, { ...portal }],
-    })),
+  addInPortal: (portal) =>
+    set((state) => ({ inPortals: [...state.inPortals, portal] })),
+  removeInPortal: (id) =>
+    set((state) => ({ inPortals: state.inPortals.filter((p) => p.id !== id) })),
 
-  removePortal: (id) =>
+  addOutPortal: (portal) =>
+    set((state) => ({ outPortals: [...state.outPortals, portal] })),
+  removeOutPortal: (id) =>
     set((state) => ({
-      portals: state.portals.filter((p) => p.id !== id),
+      outPortals: state.outPortals.filter((p) => p.id !== id),
     })),
 }));
 
-const useRegisterPortal = ({
+const useRegisterInPortal = ({
   name,
-  type,
   intendedOut,
 }: {
   name: string;
-  type: 'in' | 'out';
-  intendedOut?: string;
+  intendedOut: string;
 }) => {
-  const { addPortal, removePortal } = useStore(ApertureStore);
+  const { addInPortal, removeInPortal } = useStore(ApertureStore);
   const id = React.useMemo(() => newId('portal'), []);
   const portal = useMemo(
-    () => ({ id, name, type, intendedOut }),
-    [id, name, type, intendedOut]
+    () => ({ id, name, intendedOut }),
+    [id, name, intendedOut]
   );
 
   React.useEffect(() => {
-    addPortal(portal);
+    addInPortal(portal);
 
     return () => {
-      removePortal(portal.id);
+      removeInPortal(portal.id);
     };
-  }, [portal, addPortal, removePortal]);
+  }, [portal, addInPortal, removeInPortal]);
+};
+
+const useRegisterOutPortal = ({ name }: { name: string }) => {
+  const { addOutPortal, removeOutPortal } = useStore(ApertureStore);
+  const id = React.useMemo(() => newId('portal'), []);
+  const portal = useMemo(() => ({ id, name }), [id, name]);
+
+  React.useEffect(() => {
+    addOutPortal(portal);
+
+    return () => {
+      removeOutPortal(portal.id);
+    };
+  }, [portal, addOutPortal, removeOutPortal]);
 };
 
 /**
  * Keeps track of the name and type of rendered portals.
  */
 export function Aperture() {
-  const { portals } = useStore(ApertureStore);
+  const { inPortals, outPortals } = useStore(ApertureStore);
 
   return (
     <div className="grid w-full grid-cols-2 gap-4">
@@ -69,40 +91,36 @@ export function Aperture() {
           <div>
             <h3>out</h3>
             <ul>
-              {portals
-                .filter((p) => p.type === 'out')
-                .map((p) => {
-                  const linked = portals.find((i) => i.intendedOut === p.name);
+              {outPortals.map((p) => {
+                const linked = inPortals.find((i) => i.intendedOut === p.name);
 
-                  return (
-                    <li
-                      className={cn(linked ? 'text-[green]' : 'text-[orange]')}
-                      key={p.id}
-                    >
-                      {p.name}
-                    </li>
-                  );
-                })}
+                return (
+                  <li
+                    className={cn(linked ? 'text-[green]' : 'text-[orange]')}
+                    key={p.id}
+                  >
+                    {p.name}
+                  </li>
+                );
+              })}
             </ul>
           </div>
 
           <div>
             <h3>in</h3>
             <ul>
-              {portals
-                .filter((p) => p.type === 'in')
-                .map((p) => {
-                  const linked = portals.find((o) => o.name === p.intendedOut);
+              {inPortals.map((p) => {
+                const linked = outPortals.find((o) => o.name === p.intendedOut);
 
-                  return (
-                    <li
-                      className={cn(linked ? 'text-[green]' : 'text-[orange]')}
-                      key={p.id}
-                    >
-                      {p.name}
-                    </li>
-                  );
-                })}
+                return (
+                  <li
+                    className={cn(linked ? 'text-[green]' : 'text-[orange]')}
+                    key={p.id}
+                  >
+                    {p.name}
+                  </li>
+                );
+              })}
             </ul>
           </div>
         </div>
@@ -124,11 +142,7 @@ export function InPortal({
   name: string;
   outPortalName: string;
 }) {
-  useRegisterPortal({
-    name,
-    type: 'in',
-    intendedOut: outPortalName,
-  });
+  useRegisterInPortal({ name, intendedOut: outPortalName });
 
   const [outPortalNode, setOutPortalNode] = React.useState<HTMLElement | null>(
     null
@@ -175,7 +189,7 @@ interface OutPortalProps extends React.HTMLAttributes<HTMLDivElement> {
  * Renders a DOM node that can be targeted by an `InPortal`.
  */
 export function OutPortal({ name, className, ...rest }: OutPortalProps) {
-  useRegisterPortal({ name, type: 'out' });
+  useRegisterOutPortal({ name });
   const debugStyles = 'border border-dashed border-[--orange]';
 
   return <div className={cn(debugStyles, className)} id={name} {...rest} />;
