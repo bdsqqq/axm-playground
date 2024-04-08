@@ -24,14 +24,18 @@ function FarAwaySlots_PretendNavBar() {
         </Button>
       </div>
       <div className={cn('flex', gap)}>
-        <div
-          id="out-nav"
+        <OutPortal
           className={cn(
             'min-w-8 border border-dashed border-[--orange]',
             'flex',
             gap
           )}
-        ></div>
+          name="out-nav"
+        >
+          <Button size="sm" variant={'secondary'}>
+            action from nav
+          </Button>
+        </OutPortal>
       </div>
     </nav>
   );
@@ -44,14 +48,11 @@ function FarAwaySlots_PretendMain() {
 
   return (
     <>
-      {document.getElementById('out-nav')
-        ? createPortal(
-            <Button size="sm" variant={'secondary'}>
-              action from main
-            </Button>,
-            document.getElementById('out-nav')
-          )
-        : null}
+      <InPortal outPortalName="out-nav">
+        <Button size="sm" variant={'secondary'}>
+          action from main
+        </Button>
+      </InPortal>
       <div className="flex flex-col bg-gray-02">
         <ButtonGroup>
           {Array.from({ length: tabsAmmount }).map((_, i) => (
@@ -83,15 +84,12 @@ function FarAwaySlots_PretendTab({ id }: { id: string }) {
 
   return (
     <>
-      {document.getElementById('out-nav')
-        ? createPortal(
-            <Button
-              size="sm"
-              variant={'secondary'}
-            >{`action from tab ${id}`}</Button>,
-            document.getElementById('out-nav')
-          )
-        : null}
+      <InPortal outPortalName="out-nav">
+        <Button
+          size="sm"
+          variant={'secondary'}
+        >{`action from tab ${id}`}</Button>
+      </InPortal>
       <div className="bg-gray-03">
         <ButtonGroup>
           {Array.from({ length: subTabsAmmount }).map((_, i) => (
@@ -119,18 +117,70 @@ function FarAwaySlots_PretendTab({ id }: { id: string }) {
   );
 }
 
+function InPortal({
+  children,
+  outPortalName,
+}: {
+  children: React.ReactNode;
+  outPortalName: string;
+}) {
+  const [outPortalNode, setOutPortalNode] = React.useState<HTMLElement | null>(
+    null
+  );
+
+  const attempts = React.useRef(0);
+  const totalAtempts = 5;
+
+  const tryToFindOutPortal = React.useCallback(() => {
+    const element = document.getElementById(outPortalName);
+    if (element) {
+      setOutPortalNode(element);
+      return;
+    }
+    if (attempts.current >= totalAtempts) return;
+
+    attempts.current += 1;
+    const timeout = setTimeout(() => {
+      tryToFindOutPortal();
+    }, 100 * attempts.current);
+    console.log(
+      `could not find outPortal with name ${outPortalName}, attempt: ${attempts.current}`
+    );
+    if (attempts.current === totalAtempts)
+      console.error(`outPortal ${outPortalName} not found`);
+
+    return () => {
+      attempts.current = 0;
+      clearTimeout(timeout);
+    };
+  }, [outPortalName]);
+
+  React.useLayoutEffect(() => {
+    tryToFindOutPortal();
+  }, [tryToFindOutPortal]);
+
+  return <>{outPortalNode ? createPortal(children, outPortalNode) : null}</>;
+}
+
+interface OutPortalProps extends React.HTMLAttributes<HTMLDivElement> {
+  name: string;
+}
+function OutPortal({ name, className, ...rest }: OutPortalProps) {
+  const debugStyles = 'border border-dashed border-[--orange]';
+
+  return <div className={cn(debugStyles, className)} id={name} {...rest} />;
+}
+
 function FarAwaySlots_PretendSubTab({ id }: { id: string }) {
   return (
     <>
-      {document.getElementById('out-nav')
-        ? createPortal(
-            <Button
-              size="sm"
-              variant={'secondary'}
-            >{`action from subtab ${id}`}</Button>,
-            document.getElementById('out-nav')
-          )
-        : null}
+      <InPortal outPortalName="out-nav">
+        <Button
+          size="sm"
+          variant={'secondary'}
+        >{`action from subtab ${id}`}</Button>
+      </InPortal>
+
       <div className="">
         <span>subtab: {id}</span>
       </div>
@@ -156,7 +206,7 @@ function PortalShowcase_Multiplexer_content() {
   const [count, setCount] = React.useState(0);
   const increment = React.useCallback(() => setCount((c) => c + 1), []);
 
-  const [element, setElement] = React.useState<HTMLElement | null>();
+  const [portalDestination, setPortalDestination] = React.useState('');
 
   return (
     <>
@@ -165,7 +215,7 @@ function PortalShowcase_Multiplexer_content() {
         {
           <Button
             variant={'secondary'}
-            onClick={() => setElement(document.getElementById('out-1'))}
+            onClick={() => setPortalDestination('out-1')}
           >
             Move to #1
           </Button>
@@ -173,7 +223,7 @@ function PortalShowcase_Multiplexer_content() {
         {
           <Button
             variant={'secondary'}
-            onClick={() => setElement(document.getElementById('out-2'))}
+            onClick={() => setPortalDestination('out-2')}
           >
             Move to #2
           </Button>
@@ -181,7 +231,9 @@ function PortalShowcase_Multiplexer_content() {
       </div>
       <div className="border border-dashed border-[--blue] p-2">
         <span className="leading-none">in-a: {count}</span>
-        {element ? createPortal(<div>out-a: {count}</div>, element) : null}
+        <InPortal outPortalName={portalDestination}>
+          <div>out-a: {count}</div>
+        </InPortal>
       </div>
     </>
   );
