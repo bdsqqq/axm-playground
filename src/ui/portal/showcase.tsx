@@ -169,6 +169,12 @@ function PortalShowcase_Multiplexer_content() {
         >
           Move to #2
         </Button>
+        <Button
+          variant={'secondary'}
+          onClick={() => setPortalDestination('intentionallyEmpty')}
+        >
+          Move to nowhere
+        </Button>
 
         <div className="grid place-items-center border border-dashed border-[--blue] px-2 py-1">
           <span className="leading-none">in-a: {count}</span>

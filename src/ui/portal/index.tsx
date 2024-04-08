@@ -153,10 +153,13 @@ export function InPortal({
 
   const tryToFindOutPortal = React.useCallback(() => {
     const element = document.getElementById(outPortalName);
-    if (element) {
-      setOutPortalNode(element);
-      return;
-    }
+    setOutPortalNode(element);
+    if (element)
+      return () => {
+        attempts.current = 0;
+        clearTimeout(timeout);
+      };
+
     if (attempts.current >= totalAtempts) return;
 
     attempts.current += 1;
