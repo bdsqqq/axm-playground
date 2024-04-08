@@ -157,31 +157,28 @@ function PortalShowcase_Multiplexer_content() {
     <>
       <div className="flex gap-2">
         <Button onClick={increment}>+1</Button>
-        {
-          <Button
-            variant={'secondary'}
-            onClick={() => setPortalDestination('out-1')}
-          >
-            Move to #1
-          </Button>
-        }
-        {
-          <Button
-            variant={'secondary'}
-            onClick={() => setPortalDestination('out-2')}
-          >
-            Move to #2
-          </Button>
-        }
-      </div>
-      <div className="border border-dashed border-[--blue] p-2">
-        <span className="leading-none">in-a: {count}</span>
-        <InPortal
-          name={`multiplexer-content`}
-          outPortalName={portalDestination}
+        <Button
+          variant={'secondary'}
+          onClick={() => setPortalDestination('out-1')}
         >
-          <div>out-a: {count}</div>
-        </InPortal>
+          Move to #1
+        </Button>
+        <Button
+          variant={'secondary'}
+          onClick={() => setPortalDestination('out-2')}
+        >
+          Move to #2
+        </Button>
+
+        <div className="grid place-items-center border border-dashed border-[--blue] px-2 py-1">
+          <span className="leading-none">in-a: {count}</span>
+          <InPortal
+            name={`multiplexer-content`}
+            outPortalName={portalDestination}
+          >
+            <div>out-a: {count}</div>
+          </InPortal>
+        </div>
       </div>
     </>
   );
