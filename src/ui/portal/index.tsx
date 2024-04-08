@@ -113,7 +113,7 @@ export function Aperture() {
 
 /**
  * Children passed to this component will be behave as if they were mounted here (they are),
- * but will be rendered as children of the DOM node of the `OutPortal` that matches the `outPortalName`.
+ * but will be rendered as children of the matching `OutPortal` in the DOM.
  */
 export function InPortal({
   children,
