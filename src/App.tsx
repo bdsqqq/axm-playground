@@ -5,19 +5,23 @@ import { Button, ButtonGroup } from './ui/button/button';
 import { createPortal } from 'react-dom';
 import { cn } from './ui/util';
 
-function PretendNavBar() {
+function FarAwaySlots_PretendNavBar() {
   const gap = 'gap-4';
 
   return (
     <nav
       className={cn(
-        'flex w-full justify-between rounded border border-gray-06 bg-gray-02 p-2',
+        'flex w-full justify-between   border border-gray-05 bg-gray-02 p-2',
         gap
       )}
     >
       <div className={cn('flex', gap)}>
-        <Button variant={'tertiary'}>Datasets</Button>
-        <Button variant={'tertiary'}>Query</Button>
+        <Button size="sm" variant={'tertiary'}>
+          Datasets
+        </Button>
+        <Button size="sm" variant={'tertiary'}>
+          Query
+        </Button>
       </div>
       <div className={cn('flex', gap)}>
         <div
@@ -33,7 +37,7 @@ function PretendNavBar() {
   );
 }
 
-function PretendMain() {
+function FarAwaySlots_PretendMain() {
   const [tab, setTab] = React.useState(0);
 
   const tabsAmmount = 3;
@@ -42,7 +46,9 @@ function PretendMain() {
     <>
       {document.getElementById('out-nav')
         ? createPortal(
-            <Button variant={'secondary'}>Hej</Button>,
+            <Button size="sm" variant={'secondary'}>
+              action from main
+            </Button>,
             document.getElementById('out-nav')
           )
         : null}
@@ -50,6 +56,7 @@ function PretendMain() {
         <ButtonGroup>
           {Array.from({ length: tabsAmmount }).map((_, i) => (
             <Button
+              size="sm"
               key={i}
               variant={'tertiary'}
               onClick={() => {
@@ -61,15 +68,15 @@ function PretendMain() {
           ))}
         </ButtonGroup>
 
-        {tab === 0 ? <PretendTab id="1" /> : null}
-        {tab === 1 ? <PretendTab id="2" /> : null}
-        {tab === 2 ? <PretendTab id="3" /> : null}
+        {tab === 0 ? <FarAwaySlots_PretendTab id="1" /> : null}
+        {tab === 1 ? <FarAwaySlots_PretendTab id="2" /> : null}
+        {tab === 2 ? <FarAwaySlots_PretendTab id="3" /> : null}
       </div>
     </>
   );
 }
 
-function PretendTab({ id }: { id: string }) {
+function FarAwaySlots_PretendTab({ id }: { id: string }) {
   const [subTab, setSubTab] = React.useState(0);
 
   const subTabsAmmount = 3;
@@ -78,7 +85,10 @@ function PretendTab({ id }: { id: string }) {
     <>
       {document.getElementById('out-nav')
         ? createPortal(
-            <Button variant={'secondary'}>{`action from tab ${id}`}</Button>,
+            <Button
+              size="sm"
+              variant={'secondary'}
+            >{`action from tab ${id}`}</Button>,
             document.getElementById('out-nav')
           )
         : null}
@@ -86,6 +96,7 @@ function PretendTab({ id }: { id: string }) {
         <ButtonGroup>
           {Array.from({ length: subTabsAmmount }).map((_, i) => (
             <Button
+              size="sm"
               key={i}
               variant={'tertiary'}
               onClick={() => {
@@ -99,21 +110,24 @@ function PretendTab({ id }: { id: string }) {
         <div className="flex flex-col p-2">
           <span>tab: {id}</span>
 
-          {subTab === 0 ? <PretendSubTab id="1" /> : null}
-          {subTab === 1 ? <PretendSubTab id="2" /> : null}
-          {subTab === 2 ? <PretendSubTab id="3" /> : null}
+          {subTab === 0 ? <FarAwaySlots_PretendSubTab id="1" /> : null}
+          {subTab === 1 ? <FarAwaySlots_PretendSubTab id="2" /> : null}
+          {subTab === 2 ? <FarAwaySlots_PretendSubTab id="3" /> : null}
         </div>
       </div>
     </>
   );
 }
 
-function PretendSubTab({ id }: { id: string }) {
+function FarAwaySlots_PretendSubTab({ id }: { id: string }) {
   return (
     <>
       {document.getElementById('out-nav')
         ? createPortal(
-            <Button variant={'secondary'}>{`action from subtab ${id}`}</Button>,
+            <Button
+              size="sm"
+              variant={'secondary'}
+            >{`action from subtab ${id}`}</Button>,
             document.getElementById('out-nav')
           )
         : null}
@@ -123,6 +137,20 @@ function PretendSubTab({ id }: { id: string }) {
     </>
   );
 }
+
+const PortalShowcase_FarAwaySlots = () => {
+  return (
+    <div
+      className="w-full"
+      style={
+        { '--orange': '#ff9a00', '--blue': '#27a7d8' } as React.CSSProperties
+      }
+    >
+      <FarAwaySlots_PretendNavBar />
+      <FarAwaySlots_PretendMain />
+    </div>
+  );
+};
 
 function PortalShowcase_Multiplexer_content() {
   const [count, setCount] = React.useState(0);
@@ -182,11 +210,6 @@ function PortalShowcase_Multiplexer() {
         { '--orange': '#ff9a00', '--blue': '#27a7d8' } as React.CSSProperties
       }
     >
-      <pre className="text-sm text-gray-11"></pre>
-
-      <PretendNavBar />
-      <PretendMain />
-
       <PortalShowcase_Multiplexer_content />
       <PortalShowcase_MultiPlexer_out />
     </div>
@@ -197,6 +220,8 @@ function App() {
   return (
     <div className="grid min-h-screen place-items-center gap-8 p-12">
       <PortalShowcase_Multiplexer />
+      <hr className="w-full border-gray-06" />
+      <PortalShowcase_FarAwaySlots />
       <hr className="w-full border-gray-06" />
       <LatencyShowcase />
       <hr className="w-full border-gray-06" />
