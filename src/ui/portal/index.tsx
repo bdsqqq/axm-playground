@@ -64,7 +64,7 @@ const useRegisterInPortal = ({
   }, [portal, addInPortal, removeInPortal]);
 };
 
-const useRegisterOutPortal = ({
+export const useRegisterOutPortal = ({
   name,
   element,
 }: {

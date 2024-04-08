@@ -1,5 +1,5 @@
 import React from 'react';
-import { InPortal, OutPortal } from '.';
+import { InPortal, OutPortal, useRegisterOutPortal } from '.';
 import { Button, ButtonGroup } from '../button/button';
 import { cn } from '../util';
 
@@ -191,9 +191,15 @@ function PortalShowcase_Multiplexer_content() {
 }
 
 function PortalShowcase_MultiPlexer_out() {
+  const outputRef = React.useRef<HTMLFormElement>(null);
+  useRegisterOutPortal({ name: 'out-1', element: outputRef.current });
+
   return (
     <div className="grid w-full grid-cols-2 gap-2">
-      <OutPortal name="out-1" className="grid h-24 place-items-center" />
+      <form
+        ref={outputRef}
+        className="grid h-24 place-items-center border border-dashed border-[red]"
+      />
       <OutPortal name="out-2" className="grid h-24 place-items-center" />
     </div>
   );
