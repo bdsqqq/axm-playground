@@ -91,7 +91,7 @@ export function Aperture() {
   const { inPortals, outPortals } = useStore(ApertureStore);
 
   return (
-    <div className="grid w-full grid-cols-2 gap-4">
+    <div className="fixed bottom-4 left-4 rounded border border-gray-05 bg-gray-03 p-2">
       <div>
         <h2>Portals</h2>
         <div className="flex gap-2">
