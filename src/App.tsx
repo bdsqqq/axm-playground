@@ -1,6 +1,6 @@
 import { ButtonShowcase, LatencyShowcase } from './ui/button/showcase';
 import { Dialoguer } from './ui/dialog/Dialog';
-import { PortalDevtools } from './ui/portal';
+import { PortalDevtools } from './ui/portal/devtools';
 import {
   PortalShowcase_FarAwaySlots,
   PortalShowcase_Multiplexer,
