@@ -1,6 +1,6 @@
 import { ButtonShowcase, LatencyShowcase } from './ui/button/showcase';
 import { Dialoguer } from './ui/dialog/Dialog';
-import { Aperture } from './ui/portal';
+import { PortalDevtools } from './ui/portal';
 import {
   PortalShowcase_FarAwaySlots,
   PortalShowcase_Multiplexer,
@@ -17,7 +17,7 @@ function App() {
       <hr className="w-full border-gray-06" />
       <ButtonShowcase />
       <Dialoguer />
-      <Aperture />
+      <PortalDevtools />
     </div>
   );
 }

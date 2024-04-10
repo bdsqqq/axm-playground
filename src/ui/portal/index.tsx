@@ -1,6 +1,6 @@
 import { useStore } from 'zustand';
 import { createStore } from 'zustand/vanilla';
-import { cn, newId } from '../util';
+import { newId } from '../util';
 import React, { useMemo } from 'react';
 import { createPortal } from 'react-dom';
 
@@ -14,7 +14,7 @@ type OutPortal = {
   name: string;
   element: HTMLElement | null;
 };
-interface ApertureState {
+interface PortalStore {
   inPortals: ReadonlyArray<InPortal>;
   outPortals: ReadonlyArray<OutPortal>;
 
@@ -24,7 +24,7 @@ interface ApertureState {
   addOutPortal: (portal: OutPortal) => void;
   removeOutPortal: (id: string) => void;
 }
-const ApertureStore = createStore<ApertureState>((set) => ({
+export const PortalStore = createStore<PortalStore>((set) => ({
   inPortals: [],
   outPortals: [],
 
@@ -48,7 +48,7 @@ const useRegisterInPortal = ({
   name: string;
   intendedOut: string;
 }) => {
-  const { addInPortal, removeInPortal } = useStore(ApertureStore);
+  const { addInPortal, removeInPortal } = useStore(PortalStore);
   const id = React.useMemo(() => newId('portal'), []);
   const portal = useMemo(
     () => ({ id, name, intendedOut }),
@@ -71,7 +71,7 @@ export const useRegisterOutPortal = ({
   name: string;
   element: HTMLElement | null;
 }) => {
-  const { addOutPortal, removeOutPortal } = useStore(ApertureStore);
+  const { addOutPortal, removeOutPortal } = useStore(PortalStore);
   const id = React.useMemo(() => newId('portal'), []);
   const portal = useMemo(() => ({ id, name, element }), [id, name, element]);
 
@@ -83,58 +83,6 @@ export const useRegisterOutPortal = ({
     };
   }, [portal, addOutPortal, removeOutPortal]);
 };
-
-/**
- * Keeps track of the name and type of rendered portals.
- */
-export function Aperture() {
-  const { inPortals, outPortals } = useStore(ApertureStore);
-
-  return (
-    <div className="fixed bottom-4 left-4 rounded border border-gray-05 bg-gray-03 p-2">
-      <div>
-        <h2>Portals</h2>
-        <div className="flex gap-2">
-          <div>
-            <h3>out</h3>
-            <ul>
-              {outPortals.map((p) => {
-                const linked = inPortals.find((i) => i.intendedOut === p.name);
-
-                return (
-                  <li
-                    className={cn(linked ? 'text-[green]' : 'text-[orange]')}
-                    key={p.id}
-                  >
-                    {p.name}
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
-
-          <div>
-            <h3>in</h3>
-            <ul>
-              {inPortals.map((p) => {
-                const linked = outPortals.find((o) => o.name === p.intendedOut);
-
-                return (
-                  <li
-                    className={cn(linked ? 'text-[green]' : 'text-[orange]')}
-                    key={p.id}
-                  >
-                    {p.name}
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
 
 /**
  * Children passed to this component will be behave as if they were mounted here (they are),
@@ -150,7 +98,7 @@ export function InPortal({
   outPortalName: string;
 }) {
   useRegisterInPortal({ name, intendedOut: outPortalName });
-  const { outPortals } = useStore(ApertureStore);
+  const { outPortals } = useStore(PortalStore);
   const [outPortalNode, setOutPortalNode] = React.useState<HTMLElement | null>(
     null
   );
@@ -175,18 +123,9 @@ interface OutPortalProps extends React.HTMLAttributes<HTMLDivElement> {
 /**
  * Renders a DOM node that can be targeted by an `InPortal`.
  */
-export function OutPortal({ name, className, ...rest }: OutPortalProps) {
+export function OutPortal({ name, ...rest }: OutPortalProps) {
   const ref = React.useRef<HTMLDivElement>(null);
-  const debugStyles = 'border border-dashed border-[--orange]';
-
   useRegisterOutPortal({ name, element: ref.current });
 
-  return (
-    <div
-      ref={ref}
-      className={cn(debugStyles, className)}
-      id={`id-${name}`}
-      {...rest}
-    />
-  );
+  return <div ref={ref} {...rest} />;
 }
