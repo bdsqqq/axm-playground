@@ -12,6 +12,7 @@ export const nanoid = customAlphabet(
 
 const prefixes = {
   portal: 'prtl',
+  window: 'win',
 } as const;
 
 /**
