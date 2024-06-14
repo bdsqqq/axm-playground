@@ -235,3 +235,21 @@ export function PortalShowcase_Multiplexer() {
     </div>
   );
 }
+
+export function PortalShowcase_dynamicOut() {
+  const [showOut, setShowOut] = React.useState(false);
+
+  return (
+    <div className="flex w-full flex-col items-center justify-center gap-4">
+      <div className="flex flex-col gap-2">
+        <Button onClick={() => setShowOut(true)}>Show out</Button>
+        <Button onClick={() => setShowOut(false)}>Hide out</Button>
+      </div>
+      {showOut ? <OutPortal name="dynamic-out" /> : null}
+
+      <InPortal name="dynamic-in" outPortalName="dynamic-out">
+        <div>Hej do</div>
+      </InPortal>
+    </div>
+  );
+}

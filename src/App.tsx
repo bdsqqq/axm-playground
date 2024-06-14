@@ -6,6 +6,7 @@ import { PortalDevtools } from './ui/portal/devtools';
 import {
   PortalShowcase_FarAwaySlots,
   PortalShowcase_Multiplexer,
+  PortalShowcase_dynamicOut,
 } from './ui/portal/showcase';
 
 function App() {
@@ -14,6 +15,8 @@ function App() {
       <NewWindowShowcase />
       <hr className="w-full border-gray-06" />
       <Input type="text" placeholder="NEXT_PUBLIC_SUPER_PASSWORD" />
+      <hr className="w-full border-gray-06" />
+      <PortalShowcase_dynamicOut />
       <hr className="w-full border-gray-06" />
       <PortalShowcase_Multiplexer />
       <hr className="w-full border-gray-06" />
